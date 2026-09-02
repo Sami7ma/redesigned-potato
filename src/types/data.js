@@ -3,10 +3,8 @@
 // ==========================================================================
 
 export const THEMES = [
-  { id: 'chameleon-glass', name: 'Chameleon Glass', icon: 'Sparkles', desc: 'Shimmering emerald-cyan glassmorphism' },
-  { id: 'warm-wood', name: 'Warm Studio Wood', icon: 'Compass', desc: 'Walnut, cedar & warm parchment study' },
-  { id: 'obsidian-dark', name: 'Obsidian Dark Glass', icon: 'Moon', desc: 'Deep obsidian slate & electric blue' },
-  { id: 'clean-lab', name: 'Clean Technical Lab', icon: 'Sun', desc: 'High-contrast academic laboratory light' }
+  { id: 'woody-gold', name: 'Champagne Gold & Wood', icon: 'Sun', desc: 'Classy champagne gold, ivory & warm walnut' },
+  { id: 'obsidian-gold', name: 'Obsidian Gold Glass', icon: 'Moon', desc: 'Deep obsidian dark glass & luminous gold' }
 ];
 
 export const CATEGORIES = {
