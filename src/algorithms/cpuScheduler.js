@@ -261,7 +261,7 @@ export function generateCpuScheduleTrace(algorithmId, processList, timeQuantum =
         readyQueue: queue.map(p => p.name),
         ganttChart: JSON.parse(JSON.stringify(ganttChart)),
         processStates: JSON.parse(JSON.stringify(procState)),
-        explanation: `${currentProc.name} ran for ${slice} time unit(s) [T=${startTime} to T=${currentTime}]. ${currentProc.remaining === 0 ? 'Process Completed! 🎉' : `Remaining burst: ${currentProc.remaining} (re-queued).`}`,
+        explanation: `${currentProc.name} ran for ${slice} time unit(s) [T=${startTime} to T=${currentTime}]. ${currentProc.remaining === 0 ? 'Process Completed.' : `Remaining burst: ${currentProc.remaining} (re-queued).`}`,
         isFinished: completedCount === n,
         avgWaitingTime: Math.round((totalWait / n) * 10) / 10,
         avgTurnaroundTime: Math.round((totalTat / n) * 10) / 10,
