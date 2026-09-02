@@ -289,7 +289,7 @@ export function generateBinarySearchTrace(sortedArray, targetValue) {
         mid,
         target: targetValue,
         found: true,
-        explanation: `Target Found! 🎯 arr[${mid}] === ${targetValue} in ${iterations} iteration(s).`,
+        explanation: `Target Found: arr[${mid}] === ${targetValue} in ${iterations} iteration(s).`,
         isFinished: true,
       });
       break;
