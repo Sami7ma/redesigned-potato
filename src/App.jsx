@@ -57,55 +57,78 @@ import ComparisonView from './components/ComparisonView';
 import TheoryModal from './components/TheoryModal';
 import CustomDataModal from './components/CustomDataModal';
 
+// URL Route to Category / Algorithm Mapping for SEO & Deep Linking
+const ROUTE_MAP = {
+  '/algorithms/operating-systems': { category: 'OS', algo: 'first-fit' },
+  '/algorithms/memory-allocation': { category: 'OS', algo: 'first-fit' },
+  '/algorithms/cpu-scheduling': { category: 'OS', algo: 'round-robin' },
+  '/algorithms/page-replacement': { category: 'OS', algo: 'lru' },
+  '/algorithms/graphs': { category: 'GRAPH', algo: 'bfs' },
+  '/algorithms/sorting': { category: 'SORT_SEARCH', algo: 'quick-sort' },
+  '/algorithms/searching': { category: 'SORT_SEARCH', algo: 'binary-search' },
+  '/algorithms/dynamic-programming': { category: 'DP', algo: 'knapsack-dp' },
+  '/algorithms/array-strings': { category: 'ARRAY_STRING', algo: 'sliding-window' },
+  '/algorithms/backtracking': { category: 'BACKTRACKING_GREEDY', algo: 'n-queens' },
+};
+
+const CATEGORY_TO_PATH = {
+  OS: '/algorithms/operating-systems',
+  GRAPH: '/algorithms/graphs',
+  SORT_SEARCH: '/algorithms/sorting',
+  DP: '/algorithms/dynamic-programming',
+  ARRAY_STRING: '/algorithms/array-strings',
+  BACKTRACKING_GREEDY: '/algorithms/backtracking',
+};
+
+const getPathForAlgo = (cat, algoId) => {
+  if (cat === 'OS') {
+    if (['first-fit', 'best-fit', 'worst-fit', 'next-fit'].includes(algoId)) return '/algorithms/memory-allocation';
+    if (['round-robin', 'fcfs-cpu', 'sjf-cpu', 'priority-cpu'].includes(algoId)) return '/algorithms/cpu-scheduling';
+    if (['lru', 'fifo-paging', 'optimal-paging'].includes(algoId)) return '/algorithms/page-replacement';
+  }
+  if (cat === 'SORT_SEARCH' && algoId === 'binary-search') return '/algorithms/searching';
+  return CATEGORY_TO_PATH[cat] || '/';
+};
+
 export default function App() {
   // Theme & Navigation State (Woody Champagne Gold & Obsidian Dark Glass)
   const [theme, setTheme] = useState('woody-gold');
-  const [category, setCategory] = useState('OS'); // OS, GRAPH, SORT_SEARCH, DP, ARRAY_STRING, BACKTRACKING_GREEDY
-  const [selectedAlgo, setSelectedAlgo] = useState('first-fit');
+  
+  // Initial Route Check
+  const initialRoute = ROUTE_MAP[typeof window !== 'undefined' ? window.location.pathname : ''] || { category: 'OS', algo: 'first-fit' };
+  const [category, setCategory] = useState(initialRoute.category);
+  const [selectedAlgo, setSelectedAlgo] = useState(initialRoute.algo);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-  // Playback State
-  const [currentStepIndex, setCurrentStepIndex] = useState(0);
-  const [isRunning, setIsRunning] = useState(false);
-  const [speed, setSpeed] = useState(1);
-
-  // Modals
-  const [showComparison, setShowComparison] = useState(false);
-  const [showTheory, setShowTheory] = useState(false);
-  const [showCustomData, setShowCustomData] = useState(false);
-
-  // Datasets for all 6 domains
-  const [holes, setHoles] = useState(DEFAULT_HOLES);
-  const [processes, setProcesses] = useState(DEFAULT_PROCESSES);
-  const [cpuProcesses, setCpuProcesses] = useState(DEFAULT_CPU_PROCESSES);
-  const [referenceString, setReferenceString] = useState(DEFAULT_PAGE_REFERENCE);
-  const [frameCount, setFrameCount] = useState(DEFAULT_FRAME_COUNT);
-  const [gridConfig, setGridConfig] = useState(DEFAULT_GRID_CONFIG);
-  const [sortArray, setSortArray] = useState(DEFAULT_SORT_ARRAY);
-  const [searchTarget, setSearchTarget] = useState(DEFAULT_SEARCH_TARGET);
-
-  const [knapsackItems, setKnapsackItems] = useState(DEFAULT_KNAPSACK_ITEMS);
-  const [knapsackCapacity, setKnapsackCapacity] = useState(DEFAULT_KNAPSACK_CAPACITY);
-  const [lcsStr1, setLcsStr1] = useState(DEFAULT_LCS_STR1);
-  const [lcsStr2, setLcsStr2] = useState(DEFAULT_LCS_STR2);
-
-  const [slidingArr, setSlidingArr] = useState(DEFAULT_SLIDING_WINDOW_ARRAY);
-  const [slidingK, setSlidingK] = useState(DEFAULT_SLIDING_WINDOW_K);
-  const [twoPointersArr, setTwoPointersArr] = useState(DEFAULT_TWO_POINTERS_ARRAY);
-  const [twoPointersTarget, setTwoPointersTarget] = useState(DEFAULT_TWO_POINTERS_TARGET);
-
-  const [kmpText, setKmpText] = useState(DEFAULT_KMP_TEXT);
-  const [kmpPattern, setKmpPattern] = useState(DEFAULT_KMP_PATTERN);
-
-  const [euclideanA, setEuclideanA] = useState(DEFAULT_EUCLIDEAN_A);
-  const [euclideanB, setEuclideanB] = useState(DEFAULT_EUCLIDEAN_B);
-
-  const [nQueensN, setNQueensN] = useState(DEFAULT_NQUEENS_N);
 
   // Sync theme attribute to HTML document
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
   }, [theme]);
+
+  // Synchronize URL path and document title on navigation
+  useEffect(() => {
+    const targetPath = getPathForAlgo(category, selectedAlgo);
+    if (window.location.pathname !== targetPath) {
+      window.history.pushState({ category, selectedAlgo }, '', targetPath);
+    }
+    const algoName = ALGORITHMS_REGISTRY[selectedAlgo]?.name || 'Algorithm';
+    document.title = `${algoName} Visualizer — AlgoLab`;
+  }, [category, selectedAlgo]);
+
+  // Listen to browser Back / Forward buttons
+  useEffect(() => {
+    const handlePopState = () => {
+      const route = ROUTE_MAP[window.location.pathname];
+      if (route) {
+        setCategory(route.category);
+        setSelectedAlgo(route.algo);
+        setCurrentStepIndex(0);
+        setIsRunning(false);
+      }
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
 
   // Handle Category Switching
   const handleSelectCategory = (newCat) => {
