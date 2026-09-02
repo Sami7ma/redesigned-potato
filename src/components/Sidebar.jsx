@@ -16,11 +16,20 @@ import {
   BarChart3,
   Search,
   Shuffle,
-  Keyboard
+  Keyboard,
+  Grid,
+  Code2,
+  Boxes,
+  Crown,
+  TrendingUp,
+  ArrowLeftRight,
+  Calculator,
+  GitFork
 } from 'lucide-react';
 import { CATEGORIES, ALGORITHMS_REGISTRY } from '../types/data';
 
 const ALGO_ICON_MAP = {
+  // OS
   'first-fit': <Zap size={14} color="#3b82f6" />,
   'best-fit': <Target size={14} color="#10b981" />,
   'worst-fit': <Maximize2 size={14} color="#f97316" />,
@@ -32,13 +41,38 @@ const ALGO_ICON_MAP = {
   'lru': <Layers size={14} color="#10b981" />,
   'fifo-paging': <Clock size={14} color="#3b82f6" />,
   'optimal-paging': <Target size={14} color="#f59e0b" />,
+
+  // Graph
   'bfs': <Network size={14} color="#3b82f6" />,
   'dfs': <Network size={14} color="#ec4899" />,
   'dijkstra': <Target size={14} color="#10b981" />,
+  'a-star': <Zap size={14} color="#f59e0b" />,
+  'floyd-warshall': <Grid size={14} color="#8b5cf6" />,
+  'kruskal': <GitFork size={14} color="#06b6d4" />,
+  'prim': <GitFork size={14} color="#10b981" />,
+  'topological-sort': <Network size={14} color="#f97316" />,
+  'union-find': <Boxes size={14} color="#ec4899" />,
+
+  // Sorting
   'quicksort': <BarChart3 size={14} color="#8b5cf6" />,
   'mergesort': <BarChart3 size={14} color="#10b981" />,
   'bubblesort': <BarChart3 size={14} color="#f97316" />,
-  'binary-search': <Search size={14} color="#06b6d4" />
+  'binary-search': <Search size={14} color="#06b6d4" />,
+
+  // DP
+  'knapsack-dp': <Grid size={14} color="#3b82f6" />,
+  'lcs-dp': <Grid size={14} color="#10b981" />,
+  'kadanes': <TrendingUp size={14} color="#f59e0b" />,
+
+  // Array/String
+  'sliding-window': <SlidersHorizontal size={14} color="#06b6d4" />,
+  'two-pointers': <ArrowLeftRight size={14} color="#8b5cf6" />,
+  'kmp-string': <Search size={14} color="#ec4899" />,
+  'euclidean-gcd': <Calculator size={14} color="#10b981" />,
+
+  // Backtracking / Greedy
+  'n-queens': <Crown size={14} color="#f59e0b" />,
+  'activity-selection': <Clock size={14} color="#3b82f6" />
 };
 
 export default function Sidebar({
@@ -59,19 +93,18 @@ export default function Sidebar({
   canStepBackward,
   onOpenCustomData,
   onRandomizeData,
-  isOpenOnMobile = false,
-  onCloseMobile = () => {}
+  isOpenOnMobile = false
 }) {
   const currentCatObj = CATEGORIES[selectedCategory] || CATEGORIES.OS;
   const currentAlgoObj = ALGORITHMS_REGISTRY[selectedAlgo] || ALGORITHMS_REGISTRY['first-fit'];
 
   // Current subcategories
-  const subcategories = currentCatObj.subcategories;
-  const activeSubcategory = subcategories.find(s => s.algos.includes(selectedAlgo)) || subcategories[0];
+  const subcategories = currentCatObj.subcategories || [];
+  const activeSubcategory = subcategories.find(s => s.algos.includes(selectedAlgo)) || subcategories[0] || { algos: [] };
 
   return (
     <aside className={`app-sidebar ${isOpenOnMobile ? 'sidebar-mobile-open' : ''}`}>
-      {/* 1. Category Switcher (Segmented Option Bar) */}
+      {/* 1. Category Switcher (6 Core Computing Domains) */}
       <div className="sidebar-section">
         <label className="sidebar-label">Algorithm Domain</label>
         <div className="segmented-category-bar">
