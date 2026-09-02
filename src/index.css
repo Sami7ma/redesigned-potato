@@ -1,83 +1,148 @@
 /* ==========================================================================
    AlgoLab • Professional Algorithm Simulation Laboratory & Workbench
-   Design System: Technical Workbench • Pure Vanilla CSS • High Density
+   Design System: Classy Workbench • Pure Vanilla CSS • 4 Rich Themes
+   Themes: Chameleon Glass, Warm Studio Wood, Obsidian Dark, Clean Lab
    ========================================================================== */
 
-/* 1. Light Theme (Technical Laboratory / Clean Workbench) */
-:root, [data-theme="light"], [data-theme="clean-university"] {
-  --bg-primary: #f8fafc;
-  --bg-secondary: #ffffff;
-  --bg-tertiary: #f1f5f9;
-  --bg-card: #ffffff;
-  --bg-card-hover: #f8fafc;
-  --bg-subtle: #e2e8f0;
+/* 1. Chameleon Glass Theme (Emerald-Cyan Glassmorphism) */
+:root, [data-theme="chameleon-glass"] {
+  --bg-primary: #061412;
+  --bg-secondary: #0a211e;
+  --bg-tertiary: #10332e;
+  --bg-card: rgba(10, 33, 30, 0.82);
+  --bg-card-hover: rgba(16, 51, 46, 0.95);
+  --bg-subtle: #16423b;
   
-  --text-primary: #0f172a;
-  --text-secondary: #334155;
-  --text-muted: #64748b;
-  --text-inverse: #ffffff;
+  --text-primary: #f0fdfa;
+  --text-secondary: #ccfbf1;
+  --text-muted: #5eead4;
+  --text-inverse: #042f2e;
 
-  --border-color: #e2e8f0;
-  --border-subtle: #cbd5e1;
-  --border-focus: #2563eb;
+  --border-color: rgba(45, 212, 191, 0.22);
+  --border-subtle: rgba(45, 212, 191, 0.35);
+  --border-focus: #2dd4bf;
 
-  --primary: #2563eb;
-  --primary-hover: #1d4ed8;
-  --primary-light: #eff6ff;
-  --primary-border: #bfdbfe;
+  --primary: #10b981;
+  --primary-hover: #059669;
+  --primary-light: rgba(16, 185, 129, 0.16);
+  --primary-border: rgba(16, 185, 129, 0.45);
 
-  --domain-os: #2563eb;
-  --domain-graph: #059669;
-  --domain-sort: #7c3aed;
+  --domain-os: #38bdf8;
+  --domain-graph: #10b981;
+  --domain-sort: #a78bfa;
+  --domain-dp: #f59e0b;
+  --domain-array: #06b6d4;
+  --domain-greedy: #ec4899;
 
-  --success: #059669;
-  --success-light: #ecfdf5;
-  --success-border: #a7f3d0;
-  --success-text: #065f46;
+  --success: #10b981;
+  --success-light: rgba(16, 185, 129, 0.15);
+  --success-border: rgba(16, 185, 129, 0.4);
+  --success-text: #6ee7b7;
 
-  --danger: #dc2626;
-  --danger-light: #fef2f2;
-  --danger-border: #fecaca;
-  --danger-text: #991b1b;
+  --danger: #f43f5e;
+  --danger-light: rgba(244, 63, 94, 0.15);
+  --danger-border: rgba(244, 63, 94, 0.4);
+  --danger-text: #fca5a5;
 
-  --warning: #d97706;
-  --warning-light: #fffbeb;
-  --warning-border: #fde68a;
-  --warning-text: #92400e;
+  --warning: #f59e0b;
+  --warning-light: rgba(245, 158, 11, 0.15);
+  --warning-border: rgba(245, 158, 11, 0.4);
+  --warning-text: #fde68a;
 
-  --info: #0284c7;
-  --info-light: #f0f9ff;
-  --info-border: #bae6fd;
+  --info: #06b6d4;
+  --info-light: rgba(6, 182, 212, 0.15);
+  --info-border: rgba(6, 182, 212, 0.4);
 
-  --free-block-bg: #f8fafc;
-  --free-block-stripe: #e2e8f0;
-  --free-block-border: #cbd5e1;
-  --free-block-text: #64748b;
+  --free-block-bg: #0d2824;
+  --free-block-stripe: #061412;
+  --free-block-border: rgba(45, 212, 191, 0.25);
+  --free-block-text: #5eead4;
 
-  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.08);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.08);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08);
-  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.12);
+  --shadow-xs: 0 1px 3px 0 rgba(0, 0, 0, 0.4);
+  --shadow-sm: 0 2px 5px 0 rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 6px 12px -2px rgba(0, 0, 0, 0.6);
+  --shadow-lg: 0 12px 20px -4px rgba(0, 0, 0, 0.7);
+  --shadow-xl: 0 24px 35px -6px rgba(0, 0, 0, 0.85);
 
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-display: 'Outfit', sans-serif;
   --font-mono: 'Fira Code', 'SF Mono', Consolas, monospace;
   
   --radius-xs: 3px;
-  --radius-sm: 4px;
-  --radius-md: 6px;
-  --radius-lg: 8px;
-  --radius-xl: 12px;
+  --radius-sm: 5px;
+  --radius-md: 7px;
+  --radius-lg: 10px;
+  --radius-xl: 14px;
 }
 
-/* 2. Dark Theme (Obsidian Developer Studio) */
-[data-theme="dark"], [data-theme="dark-tech"] {
+/* 2. Warm Studio Wood Theme (Walnut, Cedar, Amber & Parchment) */
+[data-theme="warm-wood"] {
+  --bg-primary: #1f1712;
+  --bg-secondary: #2b1f18;
+  --bg-tertiary: #3a2b22;
+  --bg-card: #2b1f18;
+  --bg-card-hover: #38281f;
+  --bg-subtle: #4a382c;
+
+  --text-primary: #fef3c7;
+  --text-secondary: #fde68a;
+  --text-muted: #d97706;
+  --text-inverse: #1f1712;
+
+  --border-color: #4a382c;
+  --border-subtle: #614a3a;
+  --border-focus: #f59e0b;
+
+  --primary: #d97706;
+  --primary-hover: #b45309;
+  --primary-light: rgba(217, 119, 6, 0.16);
+  --primary-border: rgba(217, 119, 6, 0.4);
+
+  --domain-os: #38bdf8;
+  --domain-graph: #34d399;
+  --domain-sort: #a78bfa;
+  --domain-dp: #f59e0b;
+  --domain-array: #fb923c;
+  --domain-greedy: #f43f5e;
+
+  --success: #10b981;
+  --success-light: rgba(16, 185, 129, 0.15);
+  --success-border: rgba(16, 185, 129, 0.4);
+  --success-text: #6ee7b7;
+
+  --danger: #ef4444;
+  --danger-light: rgba(239, 68, 68, 0.15);
+  --danger-border: rgba(239, 68, 68, 0.4);
+  --danger-text: #fca5a5;
+
+  --warning: #f59e0b;
+  --warning-light: rgba(245, 158, 11, 0.15);
+  --warning-border: rgba(245, 158, 11, 0.4);
+  --warning-text: #fde68a;
+
+  --info: #38bdf8;
+  --info-light: rgba(56, 189, 248, 0.15);
+  --info-border: rgba(56, 189, 248, 0.4);
+
+  --free-block-bg: #221812;
+  --free-block-stripe: #19120d;
+  --free-block-border: #4a382c;
+  --free-block-text: #d97706;
+
+  --shadow-xs: 0 1px 3px 0 rgba(0, 0, 0, 0.5);
+  --shadow-sm: 0 2px 5px 0 rgba(0, 0, 0, 0.6);
+  --shadow-md: 0 6px 12px -2px rgba(0, 0, 0, 0.7);
+  --shadow-lg: 0 12px 20px -4px rgba(0, 0, 0, 0.8);
+  --shadow-xl: 0 24px 35px -6px rgba(0, 0, 0, 0.9);
+}
+
+/* 3. Obsidian Dark Glass Theme (Deep Obsidian Slate & Electric Blue) */
+[data-theme="obsidian-dark"], [data-theme="dark"] {
   --bg-primary: #090d16;
   --bg-secondary: #0f172a;
   --bg-tertiary: #172033;
-  --bg-card: #0f172a;
-  --bg-card-hover: #162035;
+  --bg-card: rgba(15, 23, 42, 0.88);
+  --bg-card-hover: rgba(22, 32, 53, 0.95);
   --bg-subtle: #1e293b;
 
   --text-primary: #f1f5f9;
@@ -91,12 +156,15 @@
 
   --primary: #38bdf8;
   --primary-hover: #0ea5e9;
-  --primary-light: rgba(56, 189, 248, 0.12);
+  --primary-light: rgba(56, 189, 248, 0.14);
   --primary-border: rgba(56, 189, 248, 0.35);
 
   --domain-os: #38bdf8;
   --domain-graph: #34d399;
   --domain-sort: #a78bfa;
+  --domain-dp: #f59e0b;
+  --domain-array: #06b6d4;
+  --domain-greedy: #ec4899;
 
   --success: #10b981;
   --success-light: rgba(16, 185, 129, 0.12);
@@ -127,6 +195,67 @@
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.6);
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.7);
   --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.8);
+}
+
+/* 4. Clean Technical Lab Theme (Academic Light Laboratory) */
+[data-theme="clean-lab"], [data-theme="light"] {
+  --bg-primary: #f8fafc;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #f1f5f9;
+  --bg-card: #ffffff;
+  --bg-card-hover: #f8fafc;
+  --bg-subtle: #e2e8f0;
+  
+  --text-primary: #0f172a;
+  --text-secondary: #334155;
+  --text-muted: #64748b;
+  --text-inverse: #ffffff;
+
+  --border-color: #e2e8f0;
+  --border-subtle: #cbd5e1;
+  --border-focus: #2563eb;
+
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --primary-light: #eff6ff;
+  --primary-border: #bfdbfe;
+
+  --domain-os: #2563eb;
+  --domain-graph: #059669;
+  --domain-sort: #7c3aed;
+  --domain-dp: #d97706;
+  --domain-array: #0284c7;
+  --domain-greedy: #db2777;
+
+  --success: #059669;
+  --success-light: #ecfdf5;
+  --success-border: #a7f3d0;
+  --success-text: #065f46;
+
+  --danger: #dc2626;
+  --danger-light: #fef2f2;
+  --danger-border: #fecaca;
+  --danger-text: #991b1b;
+
+  --warning: #d97706;
+  --warning-light: #fffbeb;
+  --warning-border: #fde68a;
+  --warning-text: #92400e;
+
+  --info: #0284c7;
+  --info-light: #f0f9ff;
+  --info-border: #bae6fd;
+
+  --free-block-bg: #f8fafc;
+  --free-block-stripe: #e2e8f0;
+  --free-block-border: #cbd5e1;
+  --free-block-text: #64748b;
+
+  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.12);
 }
 
 /* Global Reset & Base Typography */
@@ -176,6 +305,8 @@ body {
 /* Header Bar */
 .header-bar {
   background: var(--bg-card);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border-color);
   padding: 0.5rem 1.25rem;
   position: sticky;
@@ -198,16 +329,17 @@ body {
   gap: 0.65rem;
 }
 
-.brand-icon {
+.dsa-brand-icon {
   width: 32px;
   height: 32px;
-  background: var(--primary);
+  background: linear-gradient(135deg, var(--primary), var(--domain-sort));
   color: var(--text-inverse);
   border-radius: var(--radius-sm);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  box-shadow: var(--shadow-sm);
 }
 
 .brand-title {
@@ -259,6 +391,8 @@ body {
 /* Sidebar Addon */
 .app-sidebar {
   background: var(--bg-card);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
   padding: 1rem;
@@ -318,7 +452,7 @@ body {
   border: none;
   background: transparent;
   color: var(--text-secondary);
-  font-size: 0.8rem;
+  font-size: 0.775rem;
   font-weight: 600;
   padding: 5px 8px;
   border-radius: var(--radius-xs);
@@ -350,7 +484,7 @@ body {
   border: 1px solid var(--border-color);
   background: var(--bg-tertiary);
   color: var(--text-secondary);
-  font-size: 0.7rem;
+  font-size: 0.68rem;
   font-weight: 600;
   padding: 2px 7px;
   border-radius: var(--radius-xs);
@@ -377,7 +511,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 6px 8px;
+  padding: 5px 8px;
   border-radius: var(--radius-sm);
   border: 1px solid var(--border-color);
   background: var(--bg-card);
@@ -400,13 +534,13 @@ body {
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 0.8rem;
+  font-size: 0.775rem;
   font-weight: 600;
   color: var(--text-primary);
 }
 
 .compact-algo-tag {
-  font-size: 0.65rem;
+  font-size: 0.625rem;
   font-family: var(--font-mono);
   font-weight: 600;
   padding: 1px 4px;
@@ -536,6 +670,8 @@ body {
 
 .visualizer-canvas-card {
   background: var(--bg-card);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
   padding: 1rem 1.15rem;
@@ -1095,6 +1231,127 @@ body {
   gap: 0.4rem;
 }
 
+/* DP Matrix Visualizer */
+.dp-table-wrapper {
+  overflow-x: auto;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+}
+
+.dp-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-mono);
+  font-size: 0.775rem;
+  text-align: center;
+}
+
+.dp-table th {
+  background: var(--bg-tertiary);
+  padding: 6px 8px;
+  border: 1px solid var(--border-color);
+  color: var(--text-muted);
+}
+
+.dp-table td {
+  padding: 6px 8px;
+  border: 1px solid var(--border-color);
+}
+
+.th-active {
+  background: var(--primary-light) !important;
+  color: var(--primary) !important;
+  font-weight: 800;
+}
+
+.td-header {
+  background: var(--bg-tertiary);
+  font-weight: 700;
+  text-align: left;
+}
+
+.cell-evaluating {
+  background: var(--warning-light) !important;
+  border: 2px solid var(--warning) !important;
+  font-weight: 800;
+}
+
+.cell-k-pivot {
+  background: var(--primary-light);
+}
+
+.cell-has-val {
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.cell-match {
+  background: var(--success-light) !important;
+  border: 2px solid var(--success) !important;
+  color: var(--success-text);
+  font-weight: 800;
+}
+
+/* Node Link SVG Canvas */
+.graph-svg-container {
+  display: flex;
+  justify-content: center;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 0.5rem;
+}
+
+.node-link-svg {
+  width: 100%;
+  max-width: 650px;
+  height: auto;
+}
+
+/* Array Techniques Cell */
+.array-technique-cell {
+  width: 44px;
+  height: 44px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.05rem;
+  transition: all 0.12s ease;
+}
+
+.array-technique-cell.in-window {
+  background: var(--primary-light);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 1px var(--primary);
+}
+
+.array-technique-cell.is-max-window {
+  background: var(--success-light);
+  border-color: var(--success);
+  box-shadow: 0 0 0 1px var(--success);
+}
+
+.array-technique-cell.is-pointer-active {
+  border-color: #f59e0b;
+  box-shadow: 0 0 0 2px #f59e0b;
+}
+
+.pointer-tag {
+  font-size: 0.6rem;
+  font-weight: 800;
+  padding: 1px 4px;
+  border-radius: var(--radius-xs);
+}
+
+.tag-left { background: var(--primary); color: white; }
+.tag-right { background: #8b5cf6; color: white; }
+.tag-curr { background: #f59e0b; color: white; }
+
 /* Sorting & Searching Visualizer */
 .bars-container {
   height: 200px;
@@ -1196,6 +1453,8 @@ body {
 
 .metrics-card, .narrator-card {
   background: var(--bg-card);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
   padding: 1rem;
@@ -1394,8 +1653,9 @@ body {
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1405,6 +1665,8 @@ body {
 
 .modal-content {
   background: var(--bg-card);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
   max-width: 900px;
