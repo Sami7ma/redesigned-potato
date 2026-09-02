@@ -1,78 +1,80 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { 
   Play, 
   Pause, 
+  RotateCcw, 
   ChevronRight, 
   ChevronLeft, 
-  RotateCcw, 
-  Clock, 
-  SlidersHorizontal, 
-  Zap,
-  Target,
-  Maximize2,
-  Cpu,
-  Layers,
-  Network,
-  BarChart3,
+  Sliders, 
+  Shuffle, 
+  Cpu, 
+  Layers, 
+  Network, 
+  BarChart3, 
+  Code2, 
   Search,
-  Shuffle,
-  Keyboard,
+  Sparkles,
+  Zap,
   Grid,
-  Code2,
-  Boxes,
-  Crown,
   TrendingUp,
-  ArrowLeftRight,
-  Calculator,
-  GitFork
+  Activity,
+  Boxes,
+  HelpCircle,
+  FolderTree,
+  ChevronDown,
+  Check
 } from 'lucide-react';
 import { CATEGORIES, ALGORITHMS_REGISTRY } from '../types/data';
 
+const DOMAIN_ICON_MAP = {
+  OS: <Cpu size={16} color="var(--primary)" />,
+  GRAPH: <Network size={16} color="#10b981" />,
+  SORT_SEARCH: <BarChart3 size={16} color="#8b5cf6" />,
+  DP: <Grid size={16} color="var(--primary)" />,
+  ARRAY_STRING: <Layers size={16} color="#06b6d4" />,
+  BACKTRACKING_GREEDY: <Boxes size={16} color="#ec4899" />
+};
+
 const ALGO_ICON_MAP = {
   // OS
-  'first-fit': <Zap size={14} color="#3b82f6" />,
-  'best-fit': <Target size={14} color="#10b981" />,
-  'worst-fit': <Maximize2 size={14} color="#f97316" />,
-  'next-fit': <RotateCcw size={14} color="#8b5cf6" />,
-  'round-robin': <Cpu size={14} color="#06b6d4" />,
-  'fcfs-cpu': <Clock size={14} color="#3b82f6" />,
-  'sjf-cpu': <Target size={14} color="#10b981" />,
-  'priority-cpu': <Target size={14} color="#ec4899" />,
-  'lru': <Layers size={14} color="#10b981" />,
-  'fifo-paging': <Clock size={14} color="#3b82f6" />,
-  'optimal-paging': <Target size={14} color="#f59e0b" />,
-
+  'first-fit': <Zap size={14} color="var(--primary)" />,
+  'best-fit': <Activity size={14} color="#10b981" />,
+  'worst-fit': <Sliders size={14} color="#f59e0b" />,
+  'next-fit': <RotateCcw size={14} color="#06b6d4" />,
+  'round-robin': <RotateCcw size={14} color="var(--primary)" />,
+  'fcfs-cpu': <ChevronRight size={14} color="#10b981" />,
+  'sjf-cpu': <TrendingUp size={14} color="#f59e0b" />,
+  'priority-cpu': <Sparkles size={14} color="#8b5cf6" />,
+  'lru': <RotateCcw size={14} color="var(--primary)" />,
+  'fifo-paging': <ChevronRight size={14} color="#10b981" />,
+  'optimal-paging': <Sparkles size={14} color="#f59e0b" />,
   // Graph
   'bfs': <Network size={14} color="#3b82f6" />,
-  'dfs': <Network size={14} color="#ec4899" />,
-  'dijkstra': <Target size={14} color="#10b981" />,
-  'a-star': <Zap size={14} color="#f59e0b" />,
+  'dfs': <FolderTree size={14} color="#8b5cf6" />,
+  'dijkstra': <Zap size={14} color="#10b981" />,
+  'a-star': <Sparkles size={14} color="#f59e0b" />,
   'floyd-warshall': <Grid size={14} color="#8b5cf6" />,
-  'kruskal': <GitFork size={14} color="#06b6d4" />,
-  'prim': <GitFork size={14} color="#10b981" />,
-  'topological-sort': <Network size={14} color="#f97316" />,
+  'kruskal': <Network size={14} color="#10b981" />,
+  'prim': <Network size={14} color="#06b6d4" />,
+  'topological-sort': <FolderTree size={14} color="#3b82f6" />,
   'union-find': <Boxes size={14} color="#ec4899" />,
-
-  // Sorting
-  'quicksort': <BarChart3 size={14} color="#8b5cf6" />,
-  'mergesort': <BarChart3 size={14} color="#10b981" />,
-  'bubblesort': <BarChart3 size={14} color="#f97316" />,
+  // Sorting & Searching
+  'quick-sort': <Zap size={14} color="#8b5cf6" />,
+  'merge-sort': <Layers size={14} color="#10b981" />,
+  'bubble-sort': <Sliders size={14} color="#f59e0b" />,
   'binary-search': <Search size={14} color="#06b6d4" />,
-
   // DP
-  'knapsack-dp': <Grid size={14} color="#3b82f6" />,
+  'knapsack-dp': <Boxes size={14} color="var(--primary)" />,
   'lcs-dp': <Grid size={14} color="#10b981" />,
   'kadanes': <TrendingUp size={14} color="#f59e0b" />,
-
-  // Array/String
-  'sliding-window': <SlidersHorizontal size={14} color="#06b6d4" />,
-  'two-pointers': <ArrowLeftRight size={14} color="#8b5cf6" />,
+  // Array & String
+  'sliding-window': <Sliders size={14} color="#06b6d4" />,
+  'two-pointers': <Layers size={14} color="#8b5cf6" />,
   'kmp-string': <Search size={14} color="#ec4899" />,
-  'euclidean-gcd': <Calculator size={14} color="#10b981" />,
-
-  // Backtracking / Greedy
-  'n-queens': <Crown size={14} color="#f59e0b" />,
-  'activity-selection': <Clock size={14} color="#3b82f6" />
+  'euclidean-gcd': <Code2 size={14} color="#10b981" />,
+  // Backtracking & Greedy
+  'n-queens': <Boxes size={14} color="#f59e0b" />,
+  'activity-selection': <Activity size={14} color="#10b981" />
 };
 
 export default function Sidebar({
@@ -95,44 +97,97 @@ export default function Sidebar({
   onRandomizeData,
   isOpenOnMobile = false
 }) {
+  const [isDomainDropdownOpen, setIsDomainDropdownOpen] = useState(false);
+  const [isAlgoDropdownOpen, setIsAlgoDropdownOpen] = useState(false);
+
+  const domainDropdownRef = useRef(null);
+  const algoDropdownRef = useRef(null);
+
   const currentCatObj = CATEGORIES[selectedCategory] || CATEGORIES.OS;
   const currentAlgoObj = ALGORITHMS_REGISTRY[selectedAlgo] || ALGORITHMS_REGISTRY['first-fit'];
 
-  // Current subcategories
+  // Subcategories
   const subcategories = currentCatObj.subcategories || [];
   const activeSubcategory = subcategories.find(s => s.algos.includes(selectedAlgo)) || subcategories[0] || { algos: [] };
 
+  // Close dropdowns on click outside
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (domainDropdownRef.current && !domainDropdownRef.current.contains(e.target)) {
+        setIsDomainDropdownOpen(false);
+      }
+      if (algoDropdownRef.current && !algoDropdownRef.current.contains(e.target)) {
+        setIsAlgoDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   return (
     <aside className={`app-sidebar ${isOpenOnMobile ? 'sidebar-mobile-open' : ''}`}>
-      {/* 1. Category Switcher (6 Core Computing Domains) */}
-      <div className="sidebar-section">
-        <label className="sidebar-label">Algorithm Domain</label>
-        <div className="segmented-category-bar">
-          {Object.entries(CATEGORIES).map(([key, cat]) => {
-            const isCatActive = selectedCategory === key;
-            return (
-              <button
-                key={key}
-                className={`segmented-cat-btn ${isCatActive ? 'active' : ''}`}
-                onClick={() => onSelectCategory(key)}
-              >
-                {cat.name}
-              </button>
-            );
-          })}
+      {/* 1. Category Switcher (Pro Dropdown Selector) */}
+      <div className="sidebar-section" ref={domainDropdownRef} style={{ position: 'relative' }}>
+        <div className="sidebar-header-row">
+          <label className="sidebar-label">Algorithm Domain</label>
+          <span className="complexity-badge">6 Domains</span>
         </div>
+
+        <button
+          type="button"
+          className="custom-select-trigger"
+          onClick={() => {
+            setIsDomainDropdownOpen(!isDomainDropdownOpen);
+            setIsAlgoDropdownOpen(false);
+          }}
+          disabled={isRunning}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0 }}>
+            {DOMAIN_ICON_MAP[selectedCategory]}
+            <span style={{ fontWeight: 700, fontSize: '0.85rem', color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              {currentCatObj.name}
+            </span>
+          </div>
+          <ChevronDown size={15} color="var(--primary)" style={{ transform: isDomainDropdownOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s ease' }} />
+        </button>
+
+        {/* Dropdown Menu Popover */}
+        {isDomainDropdownOpen && (
+          <div className="custom-select-menu">
+            {Object.entries(CATEGORIES).map(([key, cat]) => {
+              const isCatActive = selectedCategory === key;
+              return (
+                <button
+                  key={key}
+                  type="button"
+                  className={`custom-select-item ${isCatActive ? 'active' : ''}`}
+                  onClick={() => {
+                    onSelectCategory(key);
+                    setIsDomainDropdownOpen(false);
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    {DOMAIN_ICON_MAP[key]}
+                    <span style={{ fontWeight: isCatActive ? 800 : 600 }}>{cat.name}</span>
+                  </div>
+                  {isCatActive && <Check size={14} color="var(--primary)" />}
+                </button>
+              );
+            })}
+          </div>
+        )}
       </div>
 
-      {/* 2. Subcategory & Algorithm Selection Dropdown/Pills */}
-      <div className="sidebar-section">
+      {/* 2. Subcategory & Algorithm Selection Dropdowns */}
+      <div className="sidebar-section" ref={algoDropdownRef} style={{ position: 'relative' }}>
         <div className="sidebar-header-row">
           <label className="sidebar-label">Active Algorithm</label>
           <span className="complexity-badge">{currentAlgoObj.timeComplexity}</span>
         </div>
 
-        {/* Subcategory tabs if more than 1 */}
+        {/* Subcategory tabs if domain has multiple subcategories */}
         {subcategories.length > 1 && (
-          <div className="subcat-tab-row">
+          <div className="subcat-tab-row" style={{ marginBottom: '6px' }}>
             {subcategories.map(sub => {
               const isSubActive = activeSubcategory.id === sub.id;
               return (
@@ -140,6 +195,7 @@ export default function Sidebar({
                   key={sub.id}
                   className={`subcat-pill ${isSubActive ? 'active' : ''}`}
                   onClick={() => onSelectAlgo(sub.defaultAlgo)}
+                  disabled={isRunning}
                 >
                   {sub.name}
                 </button>
@@ -148,29 +204,56 @@ export default function Sidebar({
           </div>
         )}
 
-        {/* Algorithm Option Grid */}
-        <div className="compact-algo-grid">
-          {activeSubcategory.algos.map((algoId) => {
-            const algo = ALGORITHMS_REGISTRY[algoId];
-            if (!algo) return null;
-            const isSelected = selectedAlgo === algo.id;
+        {/* Algorithm Dropdown Trigger */}
+        <button
+          type="button"
+          className="custom-select-trigger"
+          onClick={() => {
+            setIsAlgoDropdownOpen(!isAlgoDropdownOpen);
+            setIsDomainDropdownOpen(false);
+          }}
+          disabled={isRunning}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0 }}>
+            {ALGO_ICON_MAP[selectedAlgo]}
+            <span style={{ fontWeight: 700, fontSize: '0.85rem', color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              {currentAlgoObj.name}
+            </span>
+          </div>
+          <ChevronDown size={15} color="var(--primary)" style={{ transform: isAlgoDropdownOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s ease' }} />
+        </button>
 
-            return (
-              <button
-                key={algo.id}
-                type="button"
-                className={`compact-algo-btn ${isSelected ? 'active' : ''}`}
-                onClick={() => onSelectAlgo(algo.id)}
-                disabled={isRunning}
-              >
-                <div className="compact-algo-title">
-                  {ALGO_ICON_MAP[algo.id]}
-                  <span>{algo.name}</span>
-                </div>
-              </button>
-            );
-          })}
-        </div>
+        {/* Algorithm Dropdown Popover */}
+        {isAlgoDropdownOpen && (
+          <div className="custom-select-menu">
+            {activeSubcategory.algos.map((algoId) => {
+              const algo = ALGORITHMS_REGISTRY[algoId];
+              if (!algo) return null;
+              const isSelected = selectedAlgo === algo.id;
+
+              return (
+                <button
+                  key={algo.id}
+                  type="button"
+                  className={`custom-select-item ${isSelected ? 'active' : ''}`}
+                  onClick={() => {
+                    onSelectAlgo(algo.id);
+                    setIsAlgoDropdownOpen(false);
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    {ALGO_ICON_MAP[algo.id]}
+                    <span style={{ fontWeight: isSelected ? 800 : 600 }}>{algo.name}</span>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <span style={{ fontSize: '0.65rem', fontFamily: 'var(--font-mono)', color: 'var(--text-muted)' }}>{algo.timeComplexity}</span>
+                    {isSelected && <Check size={14} color="var(--primary)" />}
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        )}
       </div>
 
       {/* 3. Playback Controls Toolbar */}
@@ -183,88 +266,98 @@ export default function Sidebar({
         </div>
 
         <div className="sidebar-controls-grid">
+          {/* Main Play / Pause Button */}
           <button
-            className={`btn ${isRunning ? 'btn-danger' : 'btn-primary'} btn-block`}
+            className={`btn btn-block ${isRunning ? 'btn-danger' : 'btn-primary'}`}
             onClick={onTogglePlay}
-            title={isRunning ? 'Pause Simulation (Space)' : 'Run Simulation (Space)'}
+            disabled={totalSteps === 0}
+            title={isRunning ? 'Pause execution (Space)' : 'Start simulation (Space)'}
           >
-            {isRunning ? <Pause size={14} /> : <Play size={14} />}
-            <span>{isRunning ? 'Pause' : 'Run Simulation'}</span>
+            {isRunning ? <><Pause size={14} /> Pause Execution</> : <><Play size={14} /> Run Simulation</>}
           </button>
 
+          {/* Stepping Actions */}
           <div className="controls-btn-row">
             <button
-              className="btn btn-secondary"
+              className="btn btn-secondary btn-sm"
               onClick={onStepBackward}
               disabled={!canStepBackward || isRunning}
-              title="Previous Step (Left Arrow)"
+              title="Step Backward (Left Arrow)"
             >
-              <ChevronLeft size={15} /> Back
+              <ChevronLeft size={14} /> Back
             </button>
 
             <button
-              className="btn btn-secondary"
+              className="btn btn-secondary btn-sm"
               onClick={onStepForward}
               disabled={!canStepForward || isRunning}
-              title="Next Step (Right Arrow)"
+              title="Step Forward (Right Arrow)"
             >
-              Step <ChevronRight size={15} />
+              Step <ChevronRight size={14} />
             </button>
 
             <button
-              className="btn btn-outline"
+              className="btn btn-outline btn-sm"
               onClick={onReset}
+              disabled={isRunning && currentStepIndex === 0}
               title="Reset Simulation (R)"
             >
               <RotateCcw size={14} />
             </button>
           </div>
-        </div>
 
-        {/* Speed Bar */}
-        <div className="speed-row">
-          <span className="speed-title">
-            <Clock size={12} /> Speed:
-          </span>
-          <div className="speed-btns">
-            {[0.5, 1, 1.5, 2].map((s) => (
-              <button
-                key={s}
-                className={`speed-pill ${speed === s ? 'active' : ''}`}
-                onClick={() => setSpeed(s)}
-              >
-                {s}x
-              </button>
-            ))}
+          {/* Speed Selector */}
+          <div className="speed-row">
+            <span className="speed-title">Speed:</span>
+            <div className="speed-btns">
+              {[0.5, 1, 1.5, 2].map(s => (
+                <button
+                  key={s}
+                  type="button"
+                  className={`speed-pill ${speed === s ? 'active' : ''}`}
+                  onClick={() => setSpeed(s)}
+                >
+                  {s}x
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </div>
 
-      {/* 4. Dataset Actions */}
+      {/* 4. Dataset Configuration Actions */}
       <div className="sidebar-section">
         <label className="sidebar-label">Dataset Configuration</label>
         <div className="dataset-actions-row">
-          <button className="btn btn-secondary btn-sm" onClick={onOpenCustomData} style={{ flex: 1 }}>
-            <SlidersHorizontal size={13} /> Edit Inputs
+          <button
+            className="btn btn-secondary btn-sm"
+            style={{ flex: 1 }}
+            onClick={onOpenCustomData}
+            title="Configure custom arrays, memory holes, or strings"
+          >
+            <Sliders size={13} /> Edit Data
           </button>
-          {onRandomizeData && (
-            <button className="btn btn-outline btn-sm" onClick={onRandomizeData} title="Randomize values for active algorithm">
-              <Shuffle size={13} /> Randomize
-            </button>
-          )}
+          <button
+            className="btn btn-outline btn-sm"
+            style={{ flex: 1 }}
+            onClick={onRandomizeData}
+            title="Generate random sample dataset"
+          >
+            <Shuffle size={13} /> Randomize
+          </button>
         </div>
       </div>
 
       {/* 5. Keyboard Shortcuts Strip */}
       <div className="sidebar-shortcuts-strip">
         <div className="shortcuts-label">
-          <Keyboard size={12} /> Shortcuts:
+          <HelpCircle size={12} /> Keyboard Controls
         </div>
         <div className="shortcuts-keys">
           <span><kbd className="kbd-chip">Space</kbd> Play</span>
-          <span><kbd className="kbd-chip">→</kbd> Step</span>
+          <span><kbd className="kbd-chip">&larr;/&rarr;</kbd> Step</span>
           <span><kbd className="kbd-chip">R</kbd> Reset</span>
-          <span><kbd className="kbd-chip">C</kbd> Comp</span>
+          <span><kbd className="kbd-chip">C</kbd> Compare</span>
         </div>
       </div>
     </aside>
