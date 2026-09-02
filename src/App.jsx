@@ -464,6 +464,61 @@ export default function App() {
             />
           )}
 
+          {/* Interactive Workbench Ribbon Bar (Yellow Highlight Area) */}
+          <div className="workbench-ribbon-bar">
+            <div className="ribbon-left">
+              <span className="ribbon-breadcrumb">
+                <strong>{CATEGORIES[category]?.name}</strong> &rsaquo; {ALGORITHMS_REGISTRY[selectedAlgo]?.name}
+              </span>
+              <span className="complexity-badge">{ALGORITHMS_REGISTRY[selectedAlgo]?.timeComplexity}</span>
+              <span className="complexity-badge" style={{ opacity: 0.85 }}>{ALGORITHMS_REGISTRY[selectedAlgo]?.spaceComplexity}</span>
+            </div>
+
+            <div className="ribbon-center">
+              <input
+                type="range"
+                className="ribbon-scrubber"
+                min={0}
+                max={totalSteps}
+                value={currentStepIndex}
+                onChange={(e) => {
+                  setCurrentStepIndex(Number(e.target.value));
+                  setIsRunning(false);
+                }}
+                title="Drag to scrub timeline"
+              />
+              <span className="ribbon-step-tag">
+                Step {currentStepIndex} / {totalSteps}
+              </span>
+            </div>
+
+            <div className="ribbon-right">
+              <button
+                className="btn btn-secondary btn-sm"
+                onClick={() => currentStepIndex > 0 && setCurrentStepIndex(c => c - 1)}
+                disabled={currentStepIndex === 0 || isRunning}
+                title="Step Backward"
+              >
+                Back
+              </button>
+              <button
+                className={`btn btn-sm ${isRunning ? 'btn-danger' : 'btn-primary'}`}
+                onClick={() => setIsRunning(!isRunning)}
+                disabled={totalSteps === 0}
+              >
+                {isRunning ? 'Pause' : 'Play'}
+              </button>
+              <button
+                className="btn btn-secondary btn-sm"
+                onClick={() => currentStepIndex < totalSteps && setCurrentStepIndex(c => c + 1)}
+                disabled={currentStepIndex >= totalSteps || isRunning}
+                title="Step Forward"
+              >
+                Step
+              </button>
+            </div>
+          </div>
+
           {/* Analytics Instrument Panel (MetricsPanel + LiveNarrator) */}
           <div className="analytics-grid">
             <MetricsPanel
