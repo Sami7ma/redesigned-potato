@@ -2,264 +2,197 @@ import React, { useState } from 'react';
 import { 
   BookOpen, 
   X, 
-  Cpu, 
   Layers, 
+  Cpu, 
+  Clock, 
   Network, 
   BarChart3, 
-  Zap,
-  Target,
-  Maximize2,
-  RotateCcw,
-  Clock,
-  Search
+  Search,
+  Grid,
+  Code2,
+  Boxes,
+  Crown
 } from 'lucide-react';
+import { CATEGORIES, ALGORITHMS_REGISTRY } from '../types/data';
 
-export default function TheoryModal({ onClose }) {
-  const [activeTab, setActiveTab] = useState('os-memory');
+export default function TheoryModal({ isOpen, onClose }) {
+  const [activeTab, setActiveTab] = useState('os');
+
+  if (!isOpen) return null;
 
   return (
     <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '920px' }}>
+      <div className="modal-content" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '960px' }}>
         <div className="modal-header">
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
             <BookOpen size={20} color="var(--primary)" />
-            <h2 style={{ fontSize: '1.25rem', fontWeight: 800 }}>
-              Algorithm Theory & Principles Reference
-            </h2>
+            <h2>AlgoLab • Algorithm Theory & Principles Reference Manual</h2>
           </div>
           <button className="btn btn-outline btn-sm" onClick={onClose}>
-            <X size={18} />
+            <X size={16} />
           </button>
         </div>
 
-        <div className="modal-body">
-          {/* Navigation Tabs */}
-          <div className="theory-tab-nav">
-            <button
-              className={`theory-tab-btn ${activeTab === 'os-memory' ? 'active' : ''}`}
-              onClick={() => setActiveTab('os-memory')}
-            >
-              1. OS Memory Allocation
+        {/* Tab Navigation */}
+        <div style={{ padding: '0 1.25rem', borderBottom: '1px solid var(--border-color)', background: 'var(--bg-card)' }}>
+          <div className="theory-tab-nav" style={{ marginBottom: 0, paddingBottom: '0.5rem', paddingTop: '0.5rem' }}>
+            <button className={`theory-tab-btn ${activeTab === 'os' ? 'active' : ''}`} onClick={() => setActiveTab('os')}>
+              1. Operating Systems
             </button>
-            <button
-              className={`theory-tab-btn ${activeTab === 'os-cpu' ? 'active' : ''}`}
-              onClick={() => setActiveTab('os-cpu')}
-            >
-              2. OS CPU Scheduling
+            <button className={`theory-tab-btn ${activeTab === 'graph' ? 'active' : ''}`} onClick={() => setActiveTab('graph')}>
+              2. Graph & Pathfinding
             </button>
-            <button
-              className={`theory-tab-btn ${activeTab === 'os-paging' ? 'active' : ''}`}
-              onClick={() => setActiveTab('os-paging')}
-            >
-              3. Page Replacement
+            <button className={`theory-tab-btn ${activeTab === 'sort' ? 'active' : ''}`} onClick={() => setActiveTab('sort')}>
+              3. Sorting & Searching
             </button>
-            <button
-              className={`theory-tab-btn ${activeTab === 'graph' ? 'active' : ''}`}
-              onClick={() => setActiveTab('graph')}
-            >
-              4. Graph Search (BFS, DFS, Dijkstra)
+            <button className={`theory-tab-btn ${activeTab === 'dp' ? 'active' : ''}`} onClick={() => setActiveTab('dp')}>
+              4. Dynamic Programming
             </button>
-            <button
-              className={`theory-tab-btn ${activeTab === 'sorting' ? 'active' : ''}`}
-              onClick={() => setActiveTab('sorting')}
-            >
-              5. Sorting & Binary Search
+            <button className={`theory-tab-btn ${activeTab === 'array' ? 'active' : ''}`} onClick={() => setActiveTab('array')}>
+              5. Array & Strings
+            </button>
+            <button className={`theory-tab-btn ${activeTab === 'backtrack' ? 'active' : ''}`} onClick={() => setActiveTab('backtrack')}>
+              6. Backtracking & Greedy
             </button>
           </div>
+        </div>
 
-          {/* TAB 1: OS MEMORY ALLOCATION */}
-          {activeTab === 'os-memory' && (
-            <div className="theory-content-block">
-              <h3 className="theory-title">Contiguous Dynamic Storage-Allocation Problem</h3>
-              <p className="theory-desc">
-                Given physical memory split into variable-sized free blocks (holes), how should an operating system assign contiguous memory to arriving processes?
-              </p>
-
+        <div className="modal-body">
+          {/* TAB 1: OS */}
+          {activeTab === 'os' && (
+            <div>
+              <div className="theory-title">Operating Systems: Memory, CPU & Virtual Paging</div>
               <div className="theory-card-grid">
                 <div className="card theory-inner-card">
-                  <h4 style={{ color: '#3b82f6', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <Zap size={16} /> First Fit
-                  </h4>
-                  <p><strong>Rule:</strong> Scan sequentially and assign the first hole with size &ge; request.</p>
-                  <p><strong>Tradeoff:</strong> Fast allocation time, but tends to accumulate small fragment holes near the beginning of memory.</p>
+                  <h4 style={{ color: '#3b82f6', fontWeight: 800 }}>First Fit vs Best Fit vs Worst Fit</h4>
+                  <p><strong>First Fit:</strong> Fast O(N), searches left-to-right, allocates in first hole with size &ge; process.</p>
+                  <p><strong>Best Fit:</strong> Searches all holes, allocates in smallest hole with size &ge; process (minimizes leftover).</p>
+                  <p><strong>Worst Fit:</strong> Allocates in largest hole, leaving large residual holes.</p>
                 </div>
-
                 <div className="card theory-inner-card">
-                  <h4 style={{ color: '#10b981', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <Target size={16} /> Best Fit
-                  </h4>
-                  <p><strong>Rule:</strong> Scan all holes and assign the smallest hole with size &ge; request (<code>min(hole.size - request)</code>).</p>
-                  <p><strong>Tradeoff:</strong> Preserves large contiguous blocks for future large processes, but produces tiny leftover fragments.</p>
+                  <h4 style={{ color: '#06b6d4', fontWeight: 800 }}>CPU Scheduling: Round Robin & SJF</h4>
+                  <p><strong>Round Robin (RR):</strong> Preemptive circular queue with time quantum Q=2 units. Prevents starvation.</p>
+                  <p><strong>Shortest Job First (SJF):</strong> Non-preemptive optimal average waiting time scheduling.</p>
                 </div>
-
                 <div className="card theory-inner-card">
-                  <h4 style={{ color: '#f97316', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <Maximize2 size={16} /> Worst Fit
-                  </h4>
-                  <p><strong>Rule:</strong> Assign the largest available hole (<code>max(hole.size)</code>).</p>
-                  <p><strong>Tradeoff:</strong> Leaves largest possible remainder, but quickly fragments large regions needed by subsequent large processes.</p>
-                </div>
-
-                <div className="card theory-inner-card">
-                  <h4 style={{ color: '#8b5cf6', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <RotateCcw size={16} /> Next Fit
-                  </h4>
-                  <p><strong>Rule:</strong> Circular scan starting from the location of the previous allocation.</p>
-                  <p><strong>Tradeoff:</strong> Avoids clustering at the beginning of memory; distributes fragmentation evenly.</p>
-                </div>
-              </div>
-
-              <div className="alert-banner alert-danger" style={{ marginTop: '1rem' }}>
-                <div>
-                  <strong>External Fragmentation:</strong> Occurs when total free memory across RAM is large enough to satisfy a request, but the memory is not contiguous. Paging and compaction are the standard solutions.
+                  <h4 style={{ color: '#10b981', fontWeight: 800 }}>Virtual Memory: LRU vs Optimal</h4>
+                  <p><strong>LRU:</strong> Evicts page unreferenced for longest past duration using temporal locality.</p>
+                  <p><strong>Optimal (Bélády):</strong> Theoretical baseline that evicts page unreferenced for furthest future time.</p>
                 </div>
               </div>
             </div>
           )}
 
-          {/* TAB 2: OS CPU SCHEDULING */}
-          {activeTab === 'os-cpu' && (
-            <div className="theory-content-block">
-              <h3 className="theory-title">CPU Scheduling Disciplines</h3>
-              <p className="theory-desc">
-                Determines which ready process in the queue receives CPU execution time when the processor becomes available.
-              </p>
-
-              <div className="theory-card-grid">
-                <div className="card theory-inner-card">
-                  <h4 style={{ color: '#06b6d4', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <Clock size={16} /> Round Robin (RR)
-                  </h4>
-                  <p>Preemptive time-sharing. Each process gets a fixed time slice (quantum). If unfinished, it is rotated to the back of the ready queue.</p>
-                </div>
-
-                <div className="card theory-inner-card">
-                  <h4 style={{ color: '#3b82f6', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <Layers size={16} /> First-Come, First-Served (FCFS)
-                  </h4>
-                  <p>Non-preemptive FIFO queue. Simple but vulnerable to the Convoy Effect where short jobs wait behind a CPU-intensive job.</p>
-                </div>
-
-                <div className="card theory-inner-card">
-                  <h4 style={{ color: '#10b981', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <Target size={16} /> Shortest Job First (SJF)
-                  </h4>
-                  <p>Selects the process with the shortest CPU burst time. Mathematically optimal for minimizing average waiting time.</p>
-                </div>
-
-                <div className="card theory-inner-card">
-                  <h4 style={{ color: '#ec4899', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <Target size={16} /> Priority Scheduling
-                  </h4>
-                  <p>Assigns CPU based on numerical priority ranks. Higher priority jobs run first. Requires aging to prevent process starvation.</p>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* TAB 3: PAGE REPLACEMENT */}
-          {activeTab === 'os-paging' && (
-            <div className="theory-content-block">
-              <h3 className="theory-title">Virtual Memory Page Replacement</h3>
-              <p className="theory-desc">
-                When a page fault occurs and all physical memory frames are occupied, the operating system must choose which page frame to evict.
-              </p>
-
-              <div className="theory-card-grid">
-                <div className="card theory-inner-card">
-                  <h4 style={{ color: '#10b981', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <Layers size={16} /> LRU (Least Recently Used)
-                  </h4>
-                  <p>Replaces the frame that has not been referenced for the longest period in the past. High performance heuristic approximating optimal.</p>
-                </div>
-
-                <div className="card theory-inner-card">
-                  <h4 style={{ color: '#3b82f6', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <Clock size={16} /> FIFO (First-In, First-Out)
-                  </h4>
-                  <p>Replaces the oldest loaded page. Simple queue implementation, but subject to Belady's Anomaly where more frames can cause more faults.</p>
-                </div>
-
-                <div className="card theory-inner-card">
-                  <h4 style={{ color: '#f59e0b', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <Target size={16} /> Optimal (Belady's OPT)
-                  </h4>
-                  <p>Replaces the page that will not be referenced for the longest time in the future. Theoretical lower bound on page faults.</p>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* TAB 4: GRAPH SEARCH */}
+          {/* TAB 2: GRAPH */}
           {activeTab === 'graph' && (
-            <div className="theory-content-block">
-              <h3 className="theory-title">Graph Traversal & Pathfinding Algorithms</h3>
-              <p className="theory-desc">
-                Methods for exploring graphs, tree structures, and 2D grid mazes from a starting node to a target node.
-              </p>
-
+            <div>
+              <div className="theory-title">Graph Traversal, Shortest Paths & Minimum Spanning Trees</div>
               <div className="theory-card-grid">
                 <div className="card theory-inner-card">
-                  <h4 style={{ color: '#3b82f6', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <Network size={16} /> Breadth-First Search (BFS)
-                  </h4>
-                  <p><strong>Data Structure:</strong> Queue (FIFO)</p>
-                  <p><strong>Time/Space:</strong> O(V + E) / O(V)</p>
-                  <p>Explores neighbors level-by-level. Guarantees the shortest path on unweighted graphs.</p>
+                  <h4 style={{ color: '#3b82f6', fontWeight: 800 }}>BFS vs DFS</h4>
+                  <p><strong>BFS:</strong> Queue-based level-order search. Guarantees shortest path in unweighted graphs (O(V+E)).</p>
+                  <p><strong>DFS:</strong> Stack-based recursive deep branch exploration for topological ordering and cycle detection.</p>
                 </div>
-
                 <div className="card theory-inner-card">
-                  <h4 style={{ color: '#ec4899', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <Network size={16} /> Depth-First Search (DFS)
-                  </h4>
-                  <p><strong>Data Structure:</strong> Stack (LIFO) or Recursion</p>
-                  <p><strong>Time/Space:</strong> O(V + E) / O(V)</p>
-                  <p>Explores as deep as possible along each branch before backtracking. Ideal for cycle detection and maze generation.</p>
+                  <h4 style={{ color: '#10b981', fontWeight: 800 }}>Dijkstra vs A* (A-Star)</h4>
+                  <p><strong>Dijkstra:</strong> Uniform-cost expansion on non-negative weighted graphs (O((V+E) log V)).</p>
+                  <p><strong>A* Search:</strong> Heuristic guided search using f(n) = g(n) + h(n) with Manhattan distance heuristic.</p>
                 </div>
-
                 <div className="card theory-inner-card">
-                  <h4 style={{ color: '#10b981', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <Target size={16} /> Dijkstra's Algorithm
-                  </h4>
-                  <p><strong>Data Structure:</strong> Min-Priority Queue</p>
-                  <p><strong>Time/Space:</strong> O((V + E) log V) / O(V)</p>
-                  <p>Always visits the unvisited node with smallest cumulative distance. Guarantees optimal path on graphs with non-negative edge weights.</p>
+                  <h4 style={{ color: '#8b5cf6', fontWeight: 800 }}>Floyd-Warshall & MSTs</h4>
+                  <p><strong>Floyd-Warshall:</strong> All-pairs shortest path matrix DP (O(V³)).</p>
+                  <p><strong>Kruskal / Prim:</strong> Minimum Spanning Trees using edge sorting + DSU or priority cut growth.</p>
                 </div>
               </div>
             </div>
           )}
 
-          {/* TAB 5: SORTING & SEARCHING */}
-          {activeTab === 'sorting' && (
-            <div className="theory-content-block">
-              <h3 className="theory-title">Sorting & Searching Fundamentals</h3>
-              <p className="theory-desc">
-                Core algorithmic techniques for organizing and retrieving data efficiently.
-              </p>
-
+          {/* TAB 3: SORTING */}
+          {activeTab === 'sort' && (
+            <div>
+              <div className="theory-title">Sorting & Binary Searching Complexities</div>
               <div className="theory-card-grid">
                 <div className="card theory-inner-card">
-                  <h4 style={{ color: '#8b5cf6', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <BarChart3 size={16} /> QuickSort
-                  </h4>
-                  <p><strong>Complexity:</strong> O(N log N) average, O(N^2) worst | Space: O(log N)</p>
-                  <p>Selects a pivot, partitions elements into smaller and larger subsets, and recursively sorts sub-arrays in place.</p>
+                  <h4 style={{ color: '#8b5cf6', fontWeight: 800 }}>Quick Sort</h4>
+                  <p><strong>Time:</strong> O(N log N) avg, O(N²) worst | Space: O(log N)</p>
+                  <p>In-place divide-and-conquer partitioning elements around a pivot.</p>
                 </div>
-
                 <div className="card theory-inner-card">
-                  <h4 style={{ color: '#10b981', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <BarChart3 size={16} /> Merge Sort
-                  </h4>
-                  <p><strong>Complexity:</strong> O(N log N) guaranteed | Space: O(N)</p>
-                  <p>Divide-and-conquer algorithm that recursively splits arrays into halves and merges sorted sub-arrays.</p>
+                  <h4 style={{ color: '#10b981', fontWeight: 800 }}>Merge Sort</h4>
+                  <p><strong>Time:</strong> O(N log N) guaranteed | Space: O(N)</p>
+                  <p>Stable divide-and-conquer recursively splitting and merging sub-arrays.</p>
                 </div>
-
                 <div className="card theory-inner-card">
-                  <h4 style={{ color: '#06b6d4', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <Search size={16} /> Binary Search
-                  </h4>
-                  <p><strong>Complexity:</strong> O(log N) | Space: O(1)</p>
-                  <p>Finds target in a sorted array by halving the search window at each comparison step.</p>
+                  <h4 style={{ color: '#06b6d4', fontWeight: 800 }}>Binary Search</h4>
+                  <p><strong>Time:</strong> O(log N) | Space: O(1)</p>
+                  <p>Halves search interval at each step on sorted contiguous sequences.</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 4: DP */}
+          {activeTab === 'dp' && (
+            <div>
+              <div className="theory-title">Dynamic Programming: 0/1 Knapsack, LCS & Kadane</div>
+              <div className="theory-card-grid">
+                <div className="card theory-inner-card">
+                  <h4 style={{ color: '#3b82f6', fontWeight: 800 }}>0/1 Knapsack Problem</h4>
+                  <p><strong>Recurrence:</strong> DP[i][w] = max(DP[i-1][w], val[i] + DP[i-1][w - wt[i]])</p>
+                  <p>Determines maximum value subset fitting capacity W in pseudo-polynomial O(N·W) time.</p>
+                </div>
+                <div className="card theory-inner-card">
+                  <h4 style={{ color: '#10b981', fontWeight: 800 }}>Longest Common Subsequence (LCS)</h4>
+                  <p><strong>Recurrence:</strong> DP[i][j] = (s1[i]==s2[j]) ? 1+DP[i-1][j-1] : max(DP[i-1][j], DP[i][j-1])</p>
+                  <p>Finds longest non-contiguous common character match in O(M·N) time.</p>
+                </div>
+                <div className="card theory-inner-card">
+                  <h4 style={{ color: '#f59e0b', fontWeight: 800 }}>Kadane's Algorithm</h4>
+                  <p><strong>Recurrence:</strong> currMax = max(x, currMax + x), maxSoFar = max(maxSoFar, currMax)</p>
+                  <p>Finds optimal maximum contiguous subarray sum in single linear O(N) pass.</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 5: ARRAY / STRINGS */}
+          {activeTab === 'array' && (
+            <div>
+              <div className="theory-title">Sliding Window, Two Pointers, KMP & Euclidean GCD</div>
+              <div className="theory-card-grid">
+                <div className="card theory-inner-card">
+                  <h4 style={{ color: '#06b6d4', fontWeight: 800 }}>Sliding Window & Two Pointers</h4>
+                  <p><strong>Sliding Window:</strong> Maintains running window frame to avoid repeated O(N²) calculations.</p>
+                  <p><strong>Two Pointers:</strong> Moves dual bounds inward on sorted sequences to find target pairs in O(N).</p>
+                </div>
+                <div className="card theory-inner-card">
+                  <h4 style={{ color: '#ec4899', fontWeight: 800 }}>KMP (Knuth-Morris-Pratt)</h4>
+                  <p><strong>Time:</strong> O(N + M) | Space: O(M)</p>
+                  <p>Precomputes Longest Proper Prefix which is Suffix (LPS) table to slide pattern without backtracking text pointer.</p>
+                </div>
+                <div className="card theory-inner-card">
+                  <h4 style={{ color: '#10b981', fontWeight: 800 }}>Euclidean GCD</h4>
+                  <p><strong>Principle:</strong> GCD(a, b) = GCD(b, a mod b)</p>
+                  <p>Computes greatest common divisor in logarithmic O(log(min(a,b))) steps.</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 6: BACKTRACKING / GREEDY */}
+          {activeTab === 'backtrack' && (
+            <div>
+              <div className="theory-title">State Space Backtracking & Greedy Choices</div>
+              <div className="theory-card-grid">
+                <div className="card theory-inner-card">
+                  <h4 style={{ color: '#f59e0b', fontWeight: 800 }}>N-Queens Problem</h4>
+                  <p><strong>Strategy:</strong> Backtracking (Depth-First Search on State Space Tree)</p>
+                  <p>Places N queens row by row. If an attack conflict occurs, prunes the search branch and rolls back.</p>
+                </div>
+                <div className="card theory-inner-card">
+                  <h4 style={{ color: '#3b82f6', fontWeight: 800 }}>Activity Selection (Greedy)</h4>
+                  <p><strong>Strategy:</strong> Greedy Choice Property (Sort by Finish Time)</p>
+                  <p>Greedily selects non-overlapping activity with earliest finish time, provably maximizing total bookings.</p>
                 </div>
               </div>
             </div>
