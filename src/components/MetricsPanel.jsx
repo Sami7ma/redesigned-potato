@@ -18,7 +18,6 @@ export default function MetricsPanel({
           <Activity size={16} color="var(--primary)" />
           <span>Execution Analytics & Real-Time Metrics</span>
         </h3>
-        <span className="complexity-badge">{algorithmName}</span>
       </div>
 
       {/* 1. OS Memory Allocation Metrics */}
