@@ -1,97 +1,122 @@
 # AlgoLab — Universal Algorithm Simulation & Visualization Suite
 
-> An interactive visual simulation suite for **Operating Systems Algorithms**, **Graph & Pathfinding**, and **Sorting & Searching**. Built with React, Vite, and modern Vanilla CSS.
+> 🌐 **Live Application**: **[https://algolab-eight.vercel.app/](https://algolab-eight.vercel.app/)**  
+> An interactive visual simulation suite for **Operating Systems**, **Graph & Pathfinding**, **Sorting & Searching**, **Dynamic Programming**, **Array & String Techniques**, and **Backtracking & Greedy**. Built with React 18, Vite 6, and modern Vanilla CSS.
 
 ---
 
-## Quick Start
+## ⚡ Quick Start
 
 ```bash
-# 1. Install dependencies
+# 1. Clone repository
+git clone https://github.com/Sami7ma/redesigned-potato.git
+cd redesigned-potato
+
+# 2. Install dependencies
 npm install
 
-# 2. Launch the local interactive development server
+# 3. Launch local interactive workbench
 npm run dev
 ```
 
-Visit `http://localhost:5173/` (or the port specified by Vite) in your browser.
+Visit `http://localhost:5173/` in your browser.
 
 ---
 
-## Algorithm Categories & Capabilities
+## 🚀 6 Core Domains & 20+ Implemented Algorithms
 
-### 1. Operating Systems (OS)
+### 1. 🖥️ Operating Systems (OS)
 * **Contiguous Memory Allocation**:
   * **First Fit**: Fast sequential scanning (`O(N)`).
-  * **Best Fit**: Smallest sufficient hole allocation (`O(N)`), preserving large blocks.
+  * **Best Fit**: Smallest sufficient hole allocation (`O(N)`), minimizing residual fragmentation.
   * **Worst Fit**: Largest hole allocation (`O(N)`).
   * **Next Fit**: Circular continuous search pointer (`O(N)`).
-  * *Features*: External fragmentation detector, proportional memory ruler, real-time block inspector.
 * **CPU Process Scheduling**:
-  * **Round Robin (RR)**: Preemptive time-slicing with configurable quantum.
+  * **Round Robin (RR)**: Preemptive time-slicing with time quantum $Q=2$.
   * **First-Come, First-Served (FCFS)**: Non-preemptive arrival queue order.
   * **Shortest Job First (SJF)**: Minimizes average waiting time.
   * **Priority Scheduling**: Priority-driven CPU dispatch.
-  * *Features*: Interactive Gantt chart timeline, live Ready Queue, average waiting/turnaround time metrics.
-* **Page Replacement Policies**:
-  * **Least Recently Used (LRU)**: Optimal practical heuristic.
+* **Virtual Memory Page Replacement**:
+  * **Least Recently Used (LRU)**: Optimal practical temporal locality heuristic.
   * **First-In, First-Out (FIFO)**: Queue-based replacement.
-  * **Optimal (Belady's OPT)**: Theoretical minimal page fault benchmark.
-  * *Features*: Reference string stream indicator, frame slot animations, page fault & hit ratio counters.
+  * **Optimal (Bélády's OPT)**: Theoretical minimal page fault benchmark.
 
 ---
 
-### 2. Graph & Pathfinding
-* **Breadth-First Search (BFS)**: Level-by-level FIFO frontier expansion; shortest path guarantee on unweighted graphs.
-* **Depth-First Search (DFS)**: Deep branch LIFO traversal.
-* **Dijkstra's Algorithm**: Weighted shortest path exploration with minimum priority queue.
-* *Features*: Interactive 2D Grid canvas, click to place/remove Start (MapPin), Target (Flag), and Walls (BrickWall), live queue/stack depth counter, reconstructed shortest path.
+### 2. 🕸️ Graph & Pathfinding
+* **2D Grid Traversal**:
+  * **Breadth-First Search (BFS)**: Level-by-level shortest path guarantee in unweighted graphs (`O(V + E)`).
+  * **Depth-First Search (DFS)**: Deep branch recursive traversal.
+  * **Dijkstra's Algorithm**: Weighted shortest path with minimum priority expansion.
+  * **A* (A-Star) Search**: Heuristic-guided shortest path using $f(n) = g(n) + h(n)$ Manhattan distance.
+* **All-Pairs Shortest Path**:
+  * **Floyd-Warshall**: 2D DP distance matrix relaxation across intermediate vertices (`O(V^3)`).
+* **Minimum Spanning Trees (MST)**:
+  * **Kruskal's Algorithm**: Edge sorting with Disjoint Set Union (DSU) cycle prevention.
+  * **Prim's Algorithm**: Priority cut expansion growing the minimal tree.
+* **Topology & Sets**:
+  * **Topological Sort**: Kahn's in-degree queue ordering for Directed Acyclic Graphs (DAG).
+  * **Union-Find / DSU**: Disjoint Set Union with rank heuristics and path compression.
 
 ---
 
-### 3. Sorting & Searching
-* **Quick Sort**: In-place divide-and-conquer partitioning around pivots.
-* **Merge Sort**: Stable divide-and-conquer sorting by halving and merging.
-* **Bubble Sort**: Adjacent element comparison and bubble swaps.
-* **Binary Search**: Logarithmic interval search (`O(log N)`) with active low/mid/high range indicators.
-* *Features*: Dynamic bar heights, color-coded swap highlights, comparisons counter, sorted state animations.
+### 3. 📊 Sorting & Searching
+* **Comparative Sorting**:
+  * **Quick Sort**: In-place divide-and-conquer partitioning around pivots (`O(N log N)` avg).
+  * **Merge Sort**: Guaranteed stable divide-and-conquer (`O(N log N)`).
+  * **Bubble Sort**: Adjacent element comparison and bubble swaps (`O(N^2)`).
+* **Logarithmic Search**:
+  * **Binary Search**: Logarithmic interval search (`O(log N)`) with active low/mid/high bracket range.
 
 ---
 
-## Design & Layout Highlights
-
-* **Sidebar Addon Architecture**: Clean 2-column desktop app shell with sticky control panel on the side.
-* **Mobile Responsiveness**: Responsive drawer navigation, touch-friendly buttons, and horizontal scrolling for visualizers on phones and tablets.
-* **Clean Light & Dark Modes**: Seamless toggle with Sun/Moon icons and consistent high-contrast colors.
-* **Custom Dataset Editor (Edit Inputs)**: Live data customization for any algorithm with instant re-calculation.
-* **Side-by-Side Comparator (Compare All)**: Multi-algorithm performance matrices and summary winner badges.
-* **Theory Guide**: Comprehensive algorithm principles, complexity references, and pseudocode.
+### 4. 🧮 Dynamic Programming (DP)
+* **0/1 Knapsack Problem**: 2D tableau calculation with include/exclude choices and optimal subset traceback.
+* **Longest Common Subsequence (LCS)**: 2D matching matrix with diagonal character match detection.
+* **Kadane's Algorithm**: Linear time (`O(N)`) maximum contiguous subarray sum.
 
 ---
 
-## Global Keyboard Shortcuts
-
-| Key | Action |
-| --- | --- |
-| `Space` | Play / Pause Auto-Simulation |
-| `→` (Right Arrow) | Step Forward |
-| `←` (Left Arrow) | Step Backward |
-| `R` | Reset Simulation to Step 0 |
-| `C` | Toggle Comparative Analysis Matrix |
-| `Esc` | Close Open Modals / Mobile Drawer |
+### 5. 🔍 Array & String Techniques
+* **Sliding Window**: Maximum sum contiguous subarray of fixed size $K$.
+* **Two Pointers**: Target pair sum exploration on sorted arrays.
+* **KMP (Knuth-Morris-Pratt)**: Pattern search with precomputed Longest Proper Prefix Suffix (LPS) table.
+* **Euclidean Algorithm (GCD)**: Step-by-step modulo division equations $a = b \cdot q + r$.
 
 ---
 
-## Tech Stack
-
-* **React 18** (Components & Hooks)
-* **Vite 6** (Fast Build Tooling)
-* **Lucide React** (Modern Icons)
-* **Canvas Confetti** (Celebration particle animations)
-* **Vanilla CSS** (Custom responsive design system with CSS custom properties)
+### 6. ♟️ Backtracking & Greedy
+* **N-Queens Problem**: $N \times N$ chessboard state space exploration with row placement, ray conflict detection, and backtracking rollback.
+* **Activity Selection (Greedy)**: Optimal interval scheduling maximizing non-overlapping task bookings.
 
 ---
 
-## License
+## 🎨 Dual Theme Design System
 
-MIT License. Free to use for academic research, education, and development.
+AlgoLab provides a curated **frosted glassmorphic design system**:
+1. 🪵 **Champagne Gold & Wood (`woody-gold` / Light Mode)**: Luminous ivory white parchment (`#fcfbfa`) with rich walnut text and bright champagne gold metallic accents.
+2. 🌌 **Obsidian Gold Glass (`obsidian-gold` / Dark Mode)**: Deep midnight obsidian (`#0a0d14`) with translucent frosted cards and luminous gold border highlights.
+
+---
+
+## ⌨️ Keyboard Shortcuts
+
+| Shortcut | Action |
+|:---|:---|
+| <kbd>Space</kbd> | Play / Pause Simulation |
+| <kbd>&larr;</kbd> / <kbd>&rarr;</kbd> | Step Backward / Forward |
+| <kbd>R</kbd> | Reset Simulation to Initial State |
+| <kbd>C</kbd> | Open Cross-Algorithm Comparison Matrix |
+| <kbd>Esc</kbd> | Close Active Modal / Popover |
+
+---
+
+## 🛠️ Build & Verification
+
+```bash
+# Production bundle build
+npm run build
+
+# Preview production build locally
+npm run preview
+```
