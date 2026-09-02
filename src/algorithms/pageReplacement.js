@@ -86,11 +86,11 @@ export function generatePageReplacementTrace(algorithmId, referenceString, frame
 
     let explanation = '';
     if (isHit) {
-      explanation = `Page ${page} referenced: Page HIT! ✅ Already present in physical memory frames.`;
+      explanation = `Page ${page} referenced: Page HIT. Already present in physical memory frames.`;
     } else if (replacedPage !== null) {
-      explanation = `Page ${page} referenced: Page FAULT! ⚠️ Replaced victim page ${replacedPage} using ${algorithmId.toUpperCase()}.`;
+      explanation = `Page ${page} referenced: Page FAULT. Replaced victim page ${replacedPage} using ${algorithmId.toUpperCase()}.`;
     } else {
-      explanation = `Page ${page} referenced: Page FAULT! ⚠️ Loaded into empty frame slot.`;
+      explanation = `Page ${page} referenced: Page FAULT. Loaded into empty frame slot.`;
     }
 
     steps.push({
