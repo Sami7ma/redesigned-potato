@@ -58,8 +58,8 @@ import TheoryModal from './components/TheoryModal';
 import CustomDataModal from './components/CustomDataModal';
 
 export default function App() {
-  // Theme & Navigation State
-  const [theme, setTheme] = useState('chameleon-glass'); // 'chameleon-glass' | 'warm-wood' | 'obsidian-dark' | 'clean-lab'
+  // Theme & Navigation State (Woody Champagne Gold & Obsidian Dark Glass)
+  const [theme, setTheme] = useState('woody-gold');
   const [category, setCategory] = useState('OS'); // OS, GRAPH, SORT_SEARCH, DP, ARRAY_STRING, BACKTRACKING_GREEDY
   const [selectedAlgo, setSelectedAlgo] = useState('first-fit');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
