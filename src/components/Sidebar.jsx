@@ -167,7 +167,6 @@ export default function Sidebar({
                   {ALGO_ICON_MAP[algo.id]}
                   <span>{algo.name}</span>
                 </div>
-                <span className="compact-algo-tag">{algo.tag}</span>
               </button>
             );
           })}
