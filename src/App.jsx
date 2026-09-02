@@ -7,18 +7,36 @@ import {
   DEFAULT_PROCESSES, 
   DEFAULT_CPU_PROCESSES, 
   DEFAULT_PAGE_REFERENCE, 
-  DEFAULT_FRAME_COUNT,
-  DEFAULT_GRID_CONFIG,
-  DEFAULT_SORT_ARRAY,
-  DEFAULT_SEARCH_TARGET
+  DEFAULT_FRAME_COUNT, 
+  DEFAULT_GRID_CONFIG, 
+  DEFAULT_SORT_ARRAY, 
+  DEFAULT_SEARCH_TARGET,
+  DEFAULT_KNAPSACK_ITEMS,
+  DEFAULT_KNAPSACK_CAPACITY,
+  DEFAULT_LCS_STR1,
+  DEFAULT_LCS_STR2,
+  DEFAULT_SLIDING_WINDOW_ARRAY,
+  DEFAULT_SLIDING_WINDOW_K,
+  DEFAULT_TWO_POINTERS_ARRAY,
+  DEFAULT_TWO_POINTERS_TARGET,
+  DEFAULT_KMP_TEXT,
+  DEFAULT_KMP_PATTERN,
+  DEFAULT_EUCLIDEAN_A,
+  DEFAULT_EUCLIDEAN_B,
+  DEFAULT_NQUEENS_N
 } from './types/data';
 
+// Trace Generators
 import { generateSimulationTrace as generateMemoryTrace } from './algorithms/memoryManager';
 import { generateCpuScheduleTrace } from './algorithms/cpuScheduler';
 import { generatePageReplacementTrace } from './algorithms/pageReplacement';
 import { generateGraphTrace } from './algorithms/graphAlgorithms';
 import { generateSortingTrace, generateBinarySearchTrace } from './algorithms/sortingAlgorithms';
+import { generateKnapsackTrace, generateLcsTrace, generateKadanesTrace } from './algorithms/dpAlgorithms';
+import { generateSlidingWindowTrace, generateTwoPointersTrace, generateKmpTrace, generateEuclideanTrace } from './algorithms/arrayStringAlgorithms';
+import { generateNQueensTrace, generateActivitySelectionTrace } from './algorithms/backtrackingGreedyAlgorithms';
 
+// Components
 import Header from './components/Header';
 import Sidebar from './components/Sidebar';
 import MemoryVisualizer from './components/MemoryVisualizer';
@@ -26,6 +44,13 @@ import CpuSchedulerVisualizer from './components/CpuSchedulerVisualizer';
 import PageReplacementVisualizer from './components/PageReplacementVisualizer';
 import GraphVisualizer from './components/GraphVisualizer';
 import SortingVisualizer from './components/SortingVisualizer';
+import MatrixDpVisualizer from './components/MatrixDpVisualizer';
+import TreeGraphVisualizer from './components/TreeGraphVisualizer';
+import ArrayTechniquesVisualizer from './components/ArrayTechniquesVisualizer';
+import NQueensVisualizer from './components/NQueensVisualizer';
+import StringSearchVisualizer from './components/StringSearchVisualizer';
+import MathGeometryVisualizer from './components/MathGeometryVisualizer';
+
 import MetricsPanel from './components/MetricsPanel';
 import LiveNarrator from './components/LiveNarrator';
 import ComparisonView from './components/ComparisonView';
@@ -34,8 +59,8 @@ import CustomDataModal from './components/CustomDataModal';
 
 export default function App() {
   // Theme & Navigation State
-  const [theme, setTheme] = useState('light');
-  const [category, setCategory] = useState('OS'); // OS, GRAPH, SORT_SEARCH
+  const [theme, setTheme] = useState('chameleon-glass'); // 'chameleon-glass' | 'warm-wood' | 'obsidian-dark' | 'clean-lab'
+  const [category, setCategory] = useState('OS'); // OS, GRAPH, SORT_SEARCH, DP, ARRAY_STRING, BACKTRACKING_GREEDY
   const [selectedAlgo, setSelectedAlgo] = useState('first-fit');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -49,7 +74,7 @@ export default function App() {
   const [showTheory, setShowTheory] = useState(false);
   const [showCustomData, setShowCustomData] = useState(false);
 
-  // Datasets for all algorithms
+  // Datasets for all 6 domains
   const [holes, setHoles] = useState(DEFAULT_HOLES);
   const [processes, setProcesses] = useState(DEFAULT_PROCESSES);
   const [cpuProcesses, setCpuProcesses] = useState(DEFAULT_CPU_PROCESSES);
@@ -59,7 +84,25 @@ export default function App() {
   const [sortArray, setSortArray] = useState(DEFAULT_SORT_ARRAY);
   const [searchTarget, setSearchTarget] = useState(DEFAULT_SEARCH_TARGET);
 
-  // Sync theme
+  const [knapsackItems, setKnapsackItems] = useState(DEFAULT_KNAPSACK_ITEMS);
+  const [knapsackCapacity, setKnapsackCapacity] = useState(DEFAULT_KNAPSACK_CAPACITY);
+  const [lcsStr1, setLcsStr1] = useState(DEFAULT_LCS_STR1);
+  const [lcsStr2, setLcsStr2] = useState(DEFAULT_LCS_STR2);
+
+  const [slidingArr, setSlidingArr] = useState(DEFAULT_SLIDING_WINDOW_ARRAY);
+  const [slidingK, setSlidingK] = useState(DEFAULT_SLIDING_WINDOW_K);
+  const [twoPointersArr, setTwoPointersArr] = useState(DEFAULT_TWO_POINTERS_ARRAY);
+  const [twoPointersTarget, setTwoPointersTarget] = useState(DEFAULT_TWO_POINTERS_TARGET);
+
+  const [kmpText, setKmpText] = useState(DEFAULT_KMP_TEXT);
+  const [kmpPattern, setKmpPattern] = useState(DEFAULT_KMP_PATTERN);
+
+  const [euclideanA, setEuclideanA] = useState(DEFAULT_EUCLIDEAN_A);
+  const [euclideanB, setEuclideanB] = useState(DEFAULT_EUCLIDEAN_B);
+
+  const [nQueensN, setNQueensN] = useState(DEFAULT_NQUEENS_N);
+
+  // Sync theme attribute to HTML document
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
   }, [theme]);
@@ -76,176 +119,156 @@ export default function App() {
   };
 
   // Handle Algorithm Switching
-  const handleSelectAlgo = (algoId) => {
-    setSelectedAlgo(algoId);
+  const handleSelectAlgo = (newAlgo) => {
+    setSelectedAlgo(newAlgo);
     setCurrentStepIndex(0);
     setIsRunning(false);
-    setIsMobileMenuOpen(false);
   };
 
-  // Generate Active Simulation Trace
-  const trace = useMemo(() => {
+  // Compute Active Simulation Trace (Pure Deterministic Trace Engine)
+  const activeTrace = useMemo(() => {
+    // 1. Operating Systems
     if (category === 'OS') {
       if (['first-fit', 'best-fit', 'worst-fit', 'next-fit'].includes(selectedAlgo)) {
         return generateMemoryTrace(selectedAlgo, holes, processes);
-      } else if (['round-robin', 'fcfs-cpu', 'sjf-cpu', 'priority-cpu'].includes(selectedAlgo)) {
-        return generateCpuScheduleTrace(selectedAlgo, cpuProcesses, 2);
-      } else if (['lru', 'fifo-paging', 'optimal-paging'].includes(selectedAlgo)) {
+      }
+      if (['round-robin', 'fcfs-cpu', 'sjf-cpu', 'priority-cpu'].includes(selectedAlgo)) {
+        return generateCpuScheduleTrace(selectedAlgo, cpuProcesses);
+      }
+      if (['lru', 'fifo-paging', 'optimal-paging'].includes(selectedAlgo)) {
         return generatePageReplacementTrace(selectedAlgo, referenceString, frameCount);
       }
-    } else if (category === 'GRAPH') {
+    }
+
+    // 2. Graph & Pathfinding
+    if (category === 'GRAPH') {
       return generateGraphTrace(selectedAlgo, gridConfig);
-    } else if (category === 'SORT_SEARCH') {
+    }
+
+    // 3. Sorting & Searching
+    if (category === 'SORT_SEARCH') {
       if (selectedAlgo === 'binary-search') {
         return generateBinarySearchTrace(sortArray, searchTarget);
-      } else {
-        return generateSortingTrace(selectedAlgo, sortArray);
       }
+      return generateSortingTrace(selectedAlgo, sortArray);
     }
-    return generateMemoryTrace('first-fit', holes, processes);
-  }, [category, selectedAlgo, holes, processes, cpuProcesses, referenceString, frameCount, gridConfig, sortArray, searchTarget]);
 
-  const totalSteps = (trace.steps?.length || 1) - 1;
-  const currentStepData = trace.steps ? (trace.steps[currentStepIndex] || trace.steps[0]) : null;
-  const isFinished = currentStepIndex >= totalSteps;
-
-  // Playback Handlers
-  const handleStepForward = () => {
-    if (currentStepIndex < totalSteps) {
-      setCurrentStepIndex(prev => prev + 1);
-    } else {
-      setIsRunning(false);
+    // 4. Dynamic Programming
+    if (category === 'DP') {
+      if (selectedAlgo === 'knapsack-dp') return generateKnapsackTrace(knapsackItems, knapsackCapacity);
+      if (selectedAlgo === 'lcs-dp') return generateLcsTrace(lcsStr1, lcsStr2);
+      if (selectedAlgo === 'kadanes') return generateKadanesTrace(sortArray);
     }
-  };
 
-  const handleStepBackward = () => {
-    if (currentStepIndex > 0) {
-      setCurrentStepIndex(prev => prev - 1);
+    // 5. Array & String Techniques
+    if (category === 'ARRAY_STRING') {
+      if (selectedAlgo === 'sliding-window') return generateSlidingWindowTrace(slidingArr, slidingK);
+      if (selectedAlgo === 'two-pointers') return generateTwoPointersTrace(twoPointersArr, twoPointersTarget);
+      if (selectedAlgo === 'kmp-string') return generateKmpTrace(kmpText, kmpPattern);
+      if (selectedAlgo === 'euclidean-gcd') return generateEuclideanTrace(euclideanA, euclideanB);
     }
-  };
 
-  const handleReset = () => {
-    setIsRunning(false);
-    setCurrentStepIndex(0);
-  };
-
-  const handleTogglePlay = () => {
-    if (isFinished) {
-      setCurrentStepIndex(0);
-      setIsRunning(true);
-    } else {
-      setIsRunning(prev => !prev);
+    // 6. Backtracking & Greedy
+    if (category === 'BACKTRACKING_GREEDY') {
+      if (selectedAlgo === 'n-queens') return generateNQueensTrace(nQueensN);
+      if (selectedAlgo === 'activity-selection') return generateActivitySelectionTrace();
     }
-  };
 
-  // Auto-run Timer Effect
+    return { algorithmId: selectedAlgo, steps: [] };
+  }, [
+    category, selectedAlgo, holes, processes, cpuProcesses, referenceString, frameCount,
+    gridConfig, sortArray, searchTarget, knapsackItems, knapsackCapacity, lcsStr1, lcsStr2,
+    slidingArr, slidingK, twoPointersArr, twoPointersTarget, kmpText, kmpPattern, euclideanA, euclideanB, nQueensN
+  ]);
+
+  const steps = activeTrace.steps || [];
+  const totalSteps = Math.max(steps.length - 1, 0);
+  const currentStepData = steps[currentStepIndex] || steps[0] || null;
+  const isFinished = currentStepIndex >= totalSteps && totalSteps > 0;
+
+  // Confetti on simulation finish
   useEffect(() => {
-    let timer = null;
-    if (isRunning) {
-      if (currentStepIndex >= totalSteps) {
-        setIsRunning(false);
-      } else {
-        const intervalTime = Math.round(900 / speed);
-        timer = setTimeout(() => {
-          handleStepForward();
-        }, intervalTime);
-      }
-    }
-    return () => {
-      if (timer) clearTimeout(timer);
-    };
-  }, [isRunning, currentStepIndex, totalSteps, speed]);
-
-  // Celebration particle animation
-  useEffect(() => {
-    if (isFinished && (currentStepData?.allocatedCount === processes.length || currentStepData?.targetFound || currentStepData?.found)) {
+    if (isFinished && !isRunning && totalSteps > 2) {
       try {
         confetti({
-          particleCount: 60,
+          particleCount: 50,
           spread: 60,
-          origin: { y: 0.6 }
+          origin: { y: 0.85 }
         });
       } catch (e) {}
     }
-  }, [isFinished]);
+  }, [isFinished, isRunning, totalSteps]);
+
+  // Simulation Timer Interval
+  useEffect(() => {
+    let interval = null;
+    if (isRunning) {
+      const delay = Math.max(800 / speed, 50);
+      interval = setInterval(() => {
+        setCurrentStepIndex((prev) => {
+          if (prev < totalSteps) {
+            return prev + 1;
+          } else {
+            setIsRunning(false);
+            return prev;
+          }
+        });
+      }, delay);
+    }
+    return () => clearInterval(interval);
+  }, [isRunning, speed, totalSteps]);
 
   // Keyboard Shortcuts
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (['INPUT', 'TEXTAREA'].includes(e.target.tagName)) return;
+      // Ignore inside inputs
+      if (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)) return;
 
       if (e.code === 'Space') {
         e.preventDefault();
-        handleTogglePlay();
+        setIsRunning(prev => !prev);
       } else if (e.code === 'ArrowRight') {
         e.preventDefault();
-        handleStepForward();
+        if (currentStepIndex < totalSteps && !isRunning) {
+          setCurrentStepIndex(prev => prev + 1);
+        }
       } else if (e.code === 'ArrowLeft') {
         e.preventDefault();
-        handleStepBackward();
+        if (currentStepIndex > 0 && !isRunning) {
+          setCurrentStepIndex(prev => prev - 1);
+        }
       } else if (e.key === 'r' || e.key === 'R') {
         e.preventDefault();
-        handleReset();
+        setCurrentStepIndex(0);
+        setIsRunning(false);
       } else if (e.key === 'c' || e.key === 'C') {
+        e.preventDefault();
         setShowComparison(prev => !prev);
       } else if (e.key === 'Escape') {
         setShowComparison(false);
         setShowTheory(false);
         setShowCustomData(false);
-        setIsMobileMenuOpen(false);
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isRunning, currentStepIndex, totalSteps, isFinished]);
+  }, [currentStepIndex, totalSteps, isRunning]);
 
-  // Randomize Data Generator
-  const handleRandomizeData = () => {
+  // Randomize active dataset
+  const handleRandomizeActiveData = () => {
     if (category === 'SORT_SEARCH') {
-      const randomArr = Array.from({ length: 10 }, () => Math.floor(Math.random() * 90) + 10);
-      setSortArray(randomArr);
-      setSearchTarget(randomArr[Math.floor(Math.random() * randomArr.length)]);
-    } else if (category === 'OS' && (selectedAlgo.includes('paging') || selectedAlgo === 'lru')) {
-      const randomPages = Array.from({ length: 18 }, () => Math.floor(Math.random() * 8));
-      setReferenceString(randomPages);
-    } else if (category === 'OS' && selectedAlgo.includes('cpu')) {
-      const randomCpu = cpuProcesses.map((p, i) => ({
-        ...p,
-        arrival: i,
-        burst: Math.floor(Math.random() * 8) + 2,
-        priority: Math.floor(Math.random() * 3) + 1
-      }));
-      setCpuProcesses(randomCpu);
+      const randArr = Array.from({ length: 10 }, () => Math.floor(Math.random() * 85) + 10);
+      setSortArray(randArr);
+      setSearchTarget(randArr[Math.floor(Math.random() * randArr.length)]);
     } else if (category === 'GRAPH') {
-      handleGenerateMaze();
-    }
-    setCurrentStepIndex(0);
-    setIsRunning(false);
-  };
-
-  // Interactive Grid Cell Action (Start, Target, or Wall)
-  const handleCellClick = (r, c, mode) => {
-    if (mode === 'start') {
-      // Don't place start on target
-      if (gridConfig.target.r === r && gridConfig.target.c === c) return;
-      // Remove wall if any at new start position
-      const cleanWalls = gridConfig.walls.filter(w => !(w.r === r && w.c === c));
-      setGridConfig({ ...gridConfig, start: { r, c }, walls: cleanWalls });
-    } else if (mode === 'target') {
-      // Don't place target on start
-      if (gridConfig.start.r === r && gridConfig.start.c === c) return;
-      const cleanWalls = gridConfig.walls.filter(w => !(w.r === r && w.c === c));
-      setGridConfig({ ...gridConfig, target: { r, c }, walls: cleanWalls });
-    } else {
-      // Toggle wall
-      if ((gridConfig.start.r === r && gridConfig.start.c === c) || (gridConfig.target.r === r && gridConfig.target.c === c)) return;
-      const exists = gridConfig.walls.some(w => w.r === r && w.c === c);
-      let newWalls;
-      if (exists) {
-        newWalls = gridConfig.walls.filter(w => !(w.r === r && w.c === c));
-      } else {
-        newWalls = [...gridConfig.walls, { r, c }];
+      const newWalls = [];
+      for (let r = 0; r < gridConfig.rows; r++) {
+        for (let c = 0; c < gridConfig.cols; c++) {
+          if (Math.random() < 0.22 && !(r === gridConfig.start.r && c === gridConfig.start.c) && !(r === gridConfig.target.r && c === gridConfig.target.c)) {
+            newWalls.push({ r, c });
+          }
+        }
       }
       setGridConfig({ ...gridConfig, walls: newWalls });
     }
@@ -253,58 +276,56 @@ export default function App() {
     setIsRunning(false);
   };
 
-  // Procedural Random Maze Generator
-  const handleGenerateMaze = () => {
-    const randomWalls = [];
-    for (let r = 0; r < gridConfig.rows; r++) {
-      for (let c = 0; c < gridConfig.cols; c++) {
-        const isStart = gridConfig.start.r === r && gridConfig.start.c === c;
-        const isTarget = gridConfig.target.r === r && gridConfig.target.c === c;
-        if (!isStart && !isTarget && Math.random() < 0.28) {
-          randomWalls.push({ r, c });
+  // Graph Cell Placement Tool
+  const handleGraphCellClick = (r, c, editMode) => {
+    if (editMode === 'start') {
+      setGridConfig({ ...gridConfig, start: { r, c }, walls: gridConfig.walls.filter(w => !(w.r === r && w.c === c)) });
+    } else if (editMode === 'target') {
+      setGridConfig({ ...gridConfig, target: { r, c }, walls: gridConfig.walls.filter(w => !(w.r === r && w.c === c)) });
+    } else if (editMode === 'wall') {
+      const exists = gridConfig.walls.some(w => w.r === r && w.c === c);
+      if (exists) {
+        setGridConfig({ ...gridConfig, walls: gridConfig.walls.filter(w => !(w.r === r && w.c === c)) });
+      } else {
+        if (!(r === gridConfig.start.r && c === gridConfig.start.c) && !(r === gridConfig.target.r && c === gridConfig.target.c)) {
+          setGridConfig({ ...gridConfig, walls: [...gridConfig.walls, { r, c }] });
         }
       }
     }
-    setGridConfig({ ...gridConfig, walls: randomWalls });
     setCurrentStepIndex(0);
     setIsRunning(false);
   };
-
-  // Clear All Obstacle Walls
-  const handleClearWalls = () => {
-    setGridConfig({ ...gridConfig, walls: [] });
-    setCurrentStepIndex(0);
-    setIsRunning(false);
-  };
-
-  const totalMemorySize = useMemo(() => holes.reduce((sum, h) => sum + h.size, 0), [holes]);
-  const algoDetails = ALGORITHMS_REGISTRY[selectedAlgo] || ALGORITHMS_REGISTRY['first-fit'];
 
   return (
     <div className="app-wrapper">
-      {/* Top Header */}
+      {/* Header Bar */}
       <Header
         theme={theme}
         setTheme={setTheme}
         onOpenComparison={() => setShowComparison(true)}
         onOpenTheory={() => setShowTheory(true)}
         isMobileMenuOpen={isMobileMenuOpen}
-        onToggleMobileMenu={() => setIsMobileMenuOpen(prev => !prev)}
+        onToggleMobileMenu={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
       />
 
-      {/* Main 2-Column App Layout */}
+      {/* Main 2-Column Responsive Layout */}
       <div className="app-layout">
-        {/* Sidebar (Side Addon) */}
+        {/* Mobile Backdrop */}
+        {isMobileMenuOpen && (
+          <div className="sidebar-backdrop" onClick={() => setIsMobileMenuOpen(false)} />
+        )}
+
+        {/* Sidebar Controls */}
         <Sidebar
           selectedCategory={category}
           onSelectCategory={handleSelectCategory}
           selectedAlgo={selectedAlgo}
           onSelectAlgo={handleSelectAlgo}
           isRunning={isRunning}
-          onTogglePlay={handleTogglePlay}
-          onStepForward={handleStepForward}
-          onStepBackward={handleStepBackward}
-          onReset={handleReset}
+          onTogglePlay={() => setIsRunning(!isRunning)}
+          onStepForward={() => currentStepIndex < totalSteps && setCurrentStepIndex(c => c + 1)}
+          onStepBackward={() => currentStepIndex > 0 && setCurrentStepIndex(c => c - 1)}
+          onReset={() => { setCurrentStepIndex(0); setIsRunning(false); }}
           currentStepIndex={currentStepIndex}
           totalSteps={totalSteps}
           speed={speed}
@@ -312,90 +333,138 @@ export default function App() {
           canStepForward={currentStepIndex < totalSteps}
           canStepBackward={currentStepIndex > 0}
           onOpenCustomData={() => setShowCustomData(true)}
-          onRandomizeData={handleRandomizeData}
+          onRandomizeData={handleRandomizeActiveData}
           isOpenOnMobile={isMobileMenuOpen}
-          onCloseMobile={() => setIsMobileMenuOpen(false)}
         />
 
-        {/* Backdrop for mobile drawer */}
-        {isMobileMenuOpen && (
-          <div className="sidebar-backdrop" onClick={() => setIsMobileMenuOpen(false)} />
-        )}
-
-        {/* Main Stage & Visualizer */}
+        {/* Visualizer & Analytics Canvas */}
         <main className="app-main">
-          {/* Active Visualizer Canvas */}
-          <div className="visualizer-stage">
-            {category === 'OS' && ['first-fit', 'best-fit', 'worst-fit', 'next-fit'].includes(selectedAlgo) && (
-              <MemoryVisualizer
-                memoryBlocks={currentStepData?.memoryBlocks || []}
-                totalMemorySize={totalMemorySize}
-                scannedHoleIds={currentStepData?.scannedHoleIds || []}
-                selectedHoleId={currentStepData?.selectedHoleId}
-                currentProcess={currentStepData?.currentProcess}
-              />
-            )}
+          {/* 1. OS Memory Visualizer */}
+          {category === 'OS' && ['first-fit', 'best-fit', 'worst-fit', 'next-fit'].includes(selectedAlgo) && currentStepData && (
+            <MemoryVisualizer
+              memoryBlocks={currentStepData.memoryBlocks}
+              totalMemorySize={currentStepData.totalMemorySize}
+              scannedHoleIds={currentStepData.scannedHoleIds}
+              selectedHoleId={currentStepData.selectedHoleId}
+              currentProcess={currentStepData.currentProcess}
+            />
+          )}
 
-            {category === 'OS' && ['round-robin', 'fcfs-cpu', 'sjf-cpu', 'priority-cpu'].includes(selectedAlgo) && (
-              <CpuSchedulerVisualizer
-                ganttChart={currentStepData?.ganttChart || []}
-                currentTime={currentStepData?.currentTime || 0}
-                runningProcess={currentStepData?.runningProcess}
-                readyQueue={currentStepData?.readyQueue || []}
-                processStates={currentStepData?.processStates || []}
-              />
-            )}
+          {/* 2. OS CPU Scheduler Visualizer */}
+          {category === 'OS' && ['round-robin', 'fcfs-cpu', 'sjf-cpu', 'priority-cpu'].includes(selectedAlgo) && currentStepData && (
+            <CpuSchedulerVisualizer
+              ganttChart={currentStepData.ganttChart}
+              readyQueue={currentStepData.readyQueue}
+              runningProcess={currentStepData.runningProcess}
+              currentTime={currentStepData.currentTime}
+              completedProcesses={currentStepData.completedProcesses}
+              allProcesses={cpuProcesses}
+            />
+          )}
 
-            {category === 'OS' && ['lru', 'fifo-paging', 'optimal-paging'].includes(selectedAlgo) && (
-              <PageReplacementVisualizer
-                referenceString={referenceString}
-                currentStepIndex={currentStepIndex}
-                frames={currentStepData?.frames || []}
-                isFault={currentStepData?.isFault}
-                isHit={currentStepData?.isHit}
-                replacedPage={currentStepData?.replacedPage}
-                currentPage={currentStepData?.currentPage}
-                pageFaults={currentStepData?.pageFaults || 0}
-                pageHits={currentStepData?.pageHits || 0}
-                hitRatio={currentStepData?.hitRatio || 0}
-              />
-            )}
+          {/* 3. OS Page Replacement Visualizer */}
+          {category === 'OS' && ['lru', 'fifo-paging', 'optimal-paging'].includes(selectedAlgo) && currentStepData && (
+            <PageReplacementVisualizer
+              referenceString={referenceString}
+              currentStepIndex={currentStepIndex}
+              frames={currentStepData.frames}
+              isFault={currentStepData.isFault}
+              isHit={currentStepData.isHit}
+              replacedPage={currentStepData.replacedPage}
+              currentPage={currentStepData.currentPage}
+              pageFaults={currentStepData.pageFaults}
+              pageHits={currentStepData.pageHits}
+              hitRatio={currentStepData.hitRatio}
+            />
+          )}
 
-            {category === 'GRAPH' && (
-              <GraphVisualizer
-                gridConfig={gridConfig}
-                currentCell={currentStepData?.currentCell}
-                visitedCells={currentStepData?.visitedCells || []}
-                frontierCells={currentStepData?.frontierCells || []}
-                pathCells={currentStepData?.pathCells || []}
-                targetFound={currentStepData?.targetFound}
-                onCellClick={handleCellClick}
-                onGenerateMaze={handleGenerateMaze}
-                onClearWalls={handleClearWalls}
-                isFinished={isFinished}
-              />
-            )}
+          {/* 4. Graph Visualizer (Grid BFS, DFS, Dijkstra, A*) */}
+          {category === 'GRAPH' && ['bfs', 'dfs', 'dijkstra', 'a-star'].includes(selectedAlgo) && currentStepData && (
+            <GraphVisualizer
+              gridConfig={gridConfig}
+              currentCell={currentStepData.currentCell}
+              visitedCells={currentStepData.visitedCells}
+              frontierCells={currentStepData.frontierCells}
+              pathCells={currentStepData.pathCells}
+              targetFound={currentStepData.targetFound}
+              onCellClick={handleGraphCellClick}
+              onGenerateMaze={handleRandomizeActiveData}
+              onClearWalls={() => { setGridConfig({ ...gridConfig, walls: [] }); setCurrentStepIndex(0); }}
+              isFinished={isFinished}
+            />
+          )}
 
-            {category === 'SORT_SEARCH' && (
-              <SortingVisualizer
-                algorithmId={selectedAlgo}
-                array={currentStepData?.array || []}
-                highlightIndices={currentStepData?.highlightIndices || []}
-                pivotIndex={currentStepData?.pivotIndex ?? -1}
-                sortedIndices={currentStepData?.sortedIndices || []}
-                comparisons={currentStepData?.comparisons || 0}
-                swaps={currentStepData?.swaps || 0}
-                low={currentStepData?.low ?? -1}
-                high={currentStepData?.high ?? -1}
-                mid={currentStepData?.mid ?? -1}
-                target={searchTarget}
-                found={currentStepData?.found}
-                isFinished={isFinished}
-              />
-            )}
-          </div>
+          {/* 5. Matrix DP Visualizer (Floyd-Warshall, 0/1 Knapsack, LCS) */}
+          {(selectedAlgo === 'floyd-warshall' || selectedAlgo === 'knapsack-dp' || selectedAlgo === 'lcs-dp') && currentStepData && (
+            <MatrixDpVisualizer
+              algorithmId={selectedAlgo}
+              currentStepData={currentStepData}
+              isFinished={isFinished}
+            />
+          )}
 
-          {/* Bottom Analytics & Live Explanation */}
+          {/* 6. Tree / Graph Node Visualizer (Kruskal, Prim, TopoSort, DSU) */}
+          {category === 'GRAPH' && ['kruskal', 'prim', 'topological-sort', 'union-find'].includes(selectedAlgo) && currentStepData && (
+            <TreeGraphVisualizer
+              algorithmId={selectedAlgo}
+              currentStepData={currentStepData}
+              isFinished={isFinished}
+            />
+          )}
+
+          {/* 7. Sorting & Searching Visualizer */}
+          {category === 'SORT_SEARCH' && currentStepData && (
+            <SortingVisualizer
+              algorithmId={selectedAlgo}
+              array={currentStepData.array}
+              highlightIndices={currentStepData.highlightIndices}
+              pivotIndex={currentStepData.pivotIndex}
+              sortedIndices={currentStepData.sortedIndices}
+              comparisons={currentStepData.comparisons}
+              swaps={currentStepData.swaps}
+              low={currentStepData.low}
+              high={currentStepData.high}
+              mid={currentStepData.mid}
+              target={searchTarget}
+              found={currentStepData.found}
+              isFinished={isFinished}
+            />
+          )}
+
+          {/* 8. Array Techniques Visualizer (Sliding Window, Two Pointers, Kadanes) */}
+          {(selectedAlgo === 'sliding-window' || selectedAlgo === 'two-pointers' || selectedAlgo === 'kadanes') && currentStepData && (
+            <ArrayTechniquesVisualizer
+              algorithmId={selectedAlgo}
+              currentStepData={currentStepData}
+              isFinished={isFinished}
+            />
+          )}
+
+          {/* 9. N-Queens Visualizer */}
+          {selectedAlgo === 'n-queens' && currentStepData && (
+            <NQueensVisualizer
+              currentStepData={currentStepData}
+              isFinished={isFinished}
+            />
+          )}
+
+          {/* 10. String Search Visualizer (KMP) */}
+          {selectedAlgo === 'kmp-string' && currentStepData && (
+            <StringSearchVisualizer
+              currentStepData={currentStepData}
+              isFinished={isFinished}
+            />
+          )}
+
+          {/* 11. Math Geometry Visualizer (Euclidean GCD) */}
+          {selectedAlgo === 'euclidean-gcd' && currentStepData && (
+            <MathGeometryVisualizer
+              currentStepData={currentStepData}
+              isFinished={isFinished}
+            />
+          )}
+
+          {/* Analytics Instrument Panel (MetricsPanel + LiveNarrator) */}
           <div className="analytics-grid">
             <MetricsPanel
               category={category}
@@ -403,7 +472,7 @@ export default function App() {
               currentStepData={currentStepData}
               totalSteps={totalSteps}
               isFinished={isFinished}
-              algorithmName={algoDetails.name}
+              algorithmName={ALGORITHMS_REGISTRY[selectedAlgo]?.name || selectedAlgo}
             />
 
             <LiveNarrator
@@ -416,50 +485,66 @@ export default function App() {
         </main>
       </div>
 
-      {/* Comparison Modal */}
-      {showComparison && (
-        <ComparisonView
-          category={category}
-          holes={holes}
-          processes={processes}
-          cpuProcesses={cpuProcesses}
-          referenceString={referenceString}
-          frameCount={frameCount}
-          gridConfig={gridConfig}
-          sortArray={sortArray}
-          onClose={() => setShowComparison(false)}
-          onSelectAlgorithm={handleSelectAlgo}
-        />
-      )}
+      {/* Modals */}
+      <CustomDataModal
+        isOpen={showCustomData}
+        onClose={() => setShowCustomData(false)}
+        category={category}
+        holes={holes}
+        processes={processes}
+        cpuProcesses={cpuProcesses}
+        referenceString={referenceString}
+        frameCount={frameCount}
+        gridConfig={gridConfig}
+        sortArray={sortArray}
+        searchTarget={searchTarget}
+        knapsackItems={knapsackItems}
+        knapsackCapacity={knapsackCapacity}
+        lcsStr1={lcsStr1}
+        lcsStr2={lcsStr2}
+        slidingArr={slidingArr}
+        slidingK={slidingK}
+        twoPointersArr={twoPointersArr}
+        twoPointersTarget={twoPointersTarget}
+        kmpText={kmpText}
+        kmpPattern={kmpPattern}
+        euclideanA={euclideanA}
+        euclideanB={euclideanB}
+        nQueensN={nQueensN}
+        onSaveMemory={(h, p) => { setHoles(h); setProcesses(p); }}
+        onSaveCpu={(p) => setCpuProcesses(p)}
+        onSavePaging={(ref, f) => { setReferenceString(ref); setFrameCount(f); }}
+        onSaveGraph={(g) => setGridConfig(g)}
+        onSaveSorting={(arr, t) => { setSortArray(arr); setSearchTarget(t); }}
+        onSaveKnapsack={(it, c) => { setKnapsackItems(it); setKnapsackCapacity(c); }}
+        onSaveLcs={(s1, s2) => { setLcsStr1(s1); setLcsStr2(s2); }}
+        onSaveSlidingWindow={(arr, k) => { setSlidingArr(arr); setSlidingK(k); }}
+        onSaveTwoPointers={(arr, t) => { setTwoPointersArr(arr); setTwoPointersTarget(t); }}
+        onSaveKmp={(t, p) => { setKmpText(t); setKmpPattern(p); }}
+        onSaveEuclidean={(a, b) => { setEuclideanA(a); setEuclideanB(b); }}
+        onSaveNQueens={(n) => setNQueensN(n)}
+      />
 
-      {/* Theory & Principles Modal */}
-      {showTheory && (
-        <TheoryModal
-          onClose={() => setShowTheory(false)}
-        />
-      )}
+      <ComparisonView
+        isOpen={showComparison}
+        onClose={() => setShowComparison(false)}
+        category={category}
+        onSelectAlgorithm={handleSelectAlgo}
+        holes={holes}
+        processes={processes}
+        cpuProcesses={cpuProcesses}
+        referenceString={referenceString}
+        frameCount={frameCount}
+        gridConfig={gridConfig}
+        sortArray={sortArray}
+        knapsackItems={knapsackItems}
+        knapsackCapacity={knapsackCapacity}
+      />
 
-      {/* Universal Custom Dataset Editor Modal */}
-      {showCustomData && (
-        <CustomDataModal
-          category={category}
-          algorithmId={selectedAlgo}
-          holes={holes}
-          processes={processes}
-          cpuProcesses={cpuProcesses}
-          referenceString={referenceString}
-          frameCount={frameCount}
-          gridConfig={gridConfig}
-          sortArray={sortArray}
-          searchTarget={searchTarget}
-          onSaveMemory={(h, p) => { setHoles(h); setProcesses(p); setCurrentStepIndex(0); setIsRunning(false); }}
-          onSaveCpu={(p) => { setCpuProcesses(p); setCurrentStepIndex(0); setIsRunning(false); }}
-          onSavePaging={(r, f) => { setReferenceString(r); setFrameCount(f); setCurrentStepIndex(0); setIsRunning(false); }}
-          onSaveGraph={(g) => { setGridConfig(g); setCurrentStepIndex(0); setIsRunning(false); }}
-          onSaveSorting={(arr, t) => { setSortArray(arr); setSearchTarget(t); setCurrentStepIndex(0); setIsRunning(false); }}
-          onClose={() => setShowCustomData(false)}
-        />
-      )}
+      <TheoryModal
+        isOpen={showTheory}
+        onClose={() => setShowTheory(false)}
+      />
     </div>
   );
 }
