@@ -5,18 +5,112 @@
   <meta charset="UTF-8" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AlgoLab • Interactive Algorithm Simulator & Visualizer</title>
+  
+  <!-- Primary Meta Tags -->
   <title>AlgoLab — Algorithm Visualizer & Simulator</title>
+  <meta name="title" content="AlgoLab — Algorithm Visualizer & Simulator" />
   <meta name="description"
-    content="Interactive algorithm visualizer for sorting, searching, graph algorithms, CPU scheduling, memory allocation, dynamic programming, and more." />
+    content="Explore and visualize algorithms step by step. AlgoLab provides interactive simulations for sorting and searching, graph traversal, shortest paths, CPU scheduling, memory allocation, page replacement, dynamic programming, backtracking, and greedy algorithms." />
+  <meta name="keywords" content="algorithm visualizer, sorting visualizer, graph algorithm visualizer, cpu scheduling simulator, memory allocation visualizer, dynamic programming simulator, dsa workbench, data structures and algorithms" />
+  <meta name="author" content="AlgoLab" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://algolab-eight.vercel.app/" />
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://algolab-eight.vercel.app/" />
+  <meta property="og:title" content="AlgoLab — Algorithm Visualizer & Simulator" />
+  <meta property="og:description" content="Explore and visualize algorithms step by step. AlgoLab provides interactive simulations for sorting and searching, graph traversal, shortest paths, CPU scheduling, memory allocation, page replacement, dynamic programming, backtracking, and greedy algorithms." />
+  <meta property="og:image" content="https://algolab-eight.vercel.app/favicon.svg" />
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="twitter:url" content="https://algolab-eight.vercel.app/" />
+  <meta property="twitter:title" content="AlgoLab — Algorithm Visualizer & Simulator" />
+  <meta property="twitter:description" content="Explore and visualize algorithms step by step. Interactive visual simulations for 20+ Computer Science algorithms." />
+  <meta property="twitter:image" content="https://algolab-eight.vercel.app/favicon.svg" />
+
+  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
     href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&display=swap"
     rel="stylesheet">
+
+  <!-- JSON-LD Structured Data for Google Search Rich Results -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "AlgoLab",
+    "url": "https://algolab-eight.vercel.app/",
+    "applicationCategory": "EducationalApplication",
+    "operatingSystem": "All",
+    "description": "Interactive algorithm visualizer and simulator for Operating Systems, Graph Traversal, Sorting, Searching, Dynamic Programming, and Backtracking.",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    }
+  }
+  </script>
 </head>
 
 <body>
+  <!-- Semantic SEO Crawlable Content for Search Engines -->
+  <noscript>
+    <main>
+      <h1>AlgoLab — Interactive Algorithm Visualizer</h1>
+      <p>Explore and visualize algorithms step by step. AlgoLab provides interactive simulations for sorting and searching, graph traversal, shortest paths, CPU scheduling, memory allocation, page replacement, dynamic programming, backtracking, and greedy algorithms.</p>
+      
+      <section>
+        <h2>Algorithm Visualizer</h2>
+        <p>Comprehensive interactive visual studio covering 20+ essential computer science algorithms with real-time execution metrics and deterministic state stepping.</p>
+      </section>
+
+      <section>
+        <h2>Operating System Algorithm Visualizer</h2>
+        <p>Interactive simulations for Memory Management (First Fit, Best Fit, Worst Fit, Next Fit), CPU Scheduling (Round Robin, FCFS, SJF, Priority), and Virtual Memory Page Replacement (LRU, FIFO, Optimal Bélády).</p>
+      </section>
+
+      <section>
+        <h2>CPU Scheduling Simulator</h2>
+        <p>Interactive Gantt charts, real-time process state timelines, waiting time calculation, and turnaround time metrics for Round Robin (Quantum Q=2), Shortest Job First, and Priority Scheduling.</p>
+      </section>
+
+      <section>
+        <h2>Memory Allocation Simulator</h2>
+        <p>Dynamic contiguous memory partitioning simulator displaying memory fragmentation, hole reallocation, and address tracking across First Fit, Best Fit, and Worst Fit algorithms.</p>
+      </section>
+
+      <section>
+        <h2>Graph Algorithm Visualizer</h2>
+        <p>Step-by-step 2D grid pathfinding and node-link tree visualizers for Breadth-First Search (BFS), Depth-First Search (DFS), Dijkstra's Shortest Path, A* (A-Star) Search with Manhattan heuristics, Floyd-Warshall All-Pairs matrix DP, Kruskal's MST, Prim's MST, Topological Sort, and Disjoint Set Union (Union-Find / DSU).</p>
+      </section>
+
+      <section>
+        <h2>Sorting Algorithm Visualizer</h2>
+        <p>Visual comparative sorting laboratory for Quick Sort, Merge Sort, and Bubble Sort with real-time comparison counts, array swap highlights, and logarithmic Binary Search range pointers.</p>
+      </section>
+
+      <section>
+        <h2>Dynamic Programming Visualizer</h2>
+        <p>2D tableau matrix visualizers for 0/1 Knapsack Problem (include/exclude decision grid with subset traceback), Longest Common Subsequence (LCS), and Kadane's Linear Maximum Subarray Sum.</p>
+      </section>
+
+      <section>
+        <h2>Array & String Techniques Visualizer</h2>
+        <p>Interactive sliding window frame tracking, two-pointers inward convergence, Knuth-Morris-Pratt (KMP) pattern matching with precomputed LPS table, and Euclidean GCD modulo division.</p>
+      </section>
+
+      <section>
+        <h2>Backtracking & Greedy Visualizer</h2>
+        <p>N-Queens chessboard state space tree exploration with ray conflict pruning and Activity Selection interval scheduling.</p>
+      </section>
+    </main>
+  </noscript>
+
+  <!-- React Application Root -->
   <div id="root"></div>
   <script type="module" src="/src/main.jsx"></script>
 </body>
