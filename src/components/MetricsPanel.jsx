@@ -1,5 +1,5 @@
 import React from 'react';
-import { Activity, AlertTriangle, CheckCircle2, Target, BarChart2 } from 'lucide-react';
+import { Activity, AlertTriangle, CheckCircle2, Target, BarChart2, Zap, Grid, Crown, Sparkles } from 'lucide-react';
 
 export default function MetricsPanel({
   category,
@@ -21,7 +21,7 @@ export default function MetricsPanel({
         <span className="complexity-badge">{algorithmName}</span>
       </div>
 
-      {/* OS Memory Allocation Metrics */}
+      {/* 1. OS Memory Allocation Metrics */}
       {category === 'OS' && (algorithmId.includes('fit')) && (
         <div className="kpi-grid">
           <div className="kpi-box">
@@ -62,7 +62,7 @@ export default function MetricsPanel({
         </div>
       )}
 
-      {/* OS CPU Scheduling Metrics */}
+      {/* 2. OS CPU Scheduling Metrics */}
       {category === 'OS' && (algorithmId.includes('cpu') || algorithmId === 'round-robin') && (
         <div className="kpi-grid">
           <div className="kpi-box">
@@ -90,7 +90,7 @@ export default function MetricsPanel({
         </div>
       )}
 
-      {/* OS Paging Metrics */}
+      {/* 3. OS Paging Metrics */}
       {category === 'OS' && (algorithmId.includes('paging') || algorithmId === 'lru') && (
         <div className="kpi-grid">
           <div className="kpi-box">
@@ -116,41 +116,41 @@ export default function MetricsPanel({
         </div>
       )}
 
-      {/* Graph / Pathfinding Metrics */}
+      {/* 4. Graph / Pathfinding Metrics */}
       {category === 'GRAPH' && (
         <div className="kpi-grid">
           <div className="kpi-box">
-            <div className="kpi-label">Nodes Visited</div>
-            <div className="kpi-value">{currentStepData.stats?.visitedCount ?? 0}</div>
-            <div className="kpi-sub">Explored Frontier</div>
+            <div className="kpi-label">Nodes Explored</div>
+            <div className="kpi-value">{currentStepData.visitedCells?.length ?? currentStepData.topoOrder?.length ?? currentStepData.stats?.visitedCount ?? 0}</div>
+            <div className="kpi-sub">Frontier Traversal</div>
           </div>
           <div className="kpi-box">
-            <div className="kpi-label">Queue / Stack Depth</div>
-            <div className="kpi-value">{currentStepData.frontierCells?.length ?? 0}</div>
+            <div className="kpi-label">Frontier / Queue</div>
+            <div className="kpi-value">{currentStepData.frontierCells?.length ?? currentStepData.queue?.length ?? 0}</div>
             <div className="kpi-sub">Active Boundary</div>
           </div>
           <div className="kpi-box">
-            <div className="kpi-label">Path Length</div>
-            <div className="kpi-value">{currentStepData.stats?.pathLength ?? 0} <span className="kpi-unit">cells</span></div>
-            <div className="kpi-sub">{currentStepData.targetFound ? 'Optimal Path' : 'Searching'}</div>
+            <div className="kpi-label">Path / MST Metric</div>
+            <div className="kpi-value">{currentStepData.pathCells?.length || currentStepData.mstEdges?.length || (currentStepData.k >= 0 ? `k=${currentStepData.k}` : '0')}</div>
+            <div className="kpi-sub">{currentStepData.targetFound ? 'Target Found' : 'Cost / Edge Count'}</div>
           </div>
           <div className="kpi-box">
-            <div className="kpi-label">Target Status</div>
-            <div className="kpi-value" style={{ color: currentStepData.targetFound ? 'var(--success-text)' : 'var(--text-primary)' }}>
-              {currentStepData.targetFound ? 'Target Found' : 'Searching...'}
+            <div className="kpi-label">Status</div>
+            <div className="kpi-value" style={{ color: isFinished ? 'var(--success-text)' : 'var(--text-primary)' }}>
+              {isFinished ? 'Complete' : 'Processing...'}
             </div>
-            <div className="kpi-sub">Goal Reachability</div>
+            <div className="kpi-sub">Convergence State</div>
           </div>
         </div>
       )}
 
-      {/* Sorting & Searching Metrics */}
+      {/* 5. Sorting & Searching Metrics */}
       {category === 'SORT_SEARCH' && (
         <div className="kpi-grid">
           <div className="kpi-box">
             <div className="kpi-label">Comparisons</div>
             <div className="kpi-value">{currentStepData.comparisons ?? currentStepData.iterations ?? 0}</div>
-            <div className="kpi-sub">Element Evaluations</div>
+            <div className="kpi-sub">Evaluations</div>
           </div>
           <div className="kpi-box">
             <div className="kpi-label">Swaps / Shifts</div>
@@ -158,9 +158,9 @@ export default function MetricsPanel({
             <div className="kpi-sub">Array Reorderings</div>
           </div>
           <div className="kpi-box">
-            <div className="kpi-label">Sorted Items</div>
+            <div className="kpi-label">Sorted / Found</div>
             <div className="kpi-value">{currentStepData.sortedIndices?.length ?? (currentStepData.found ? 1 : 0)}</div>
-            <div className="kpi-sub">In Final Position</div>
+            <div className="kpi-sub">Final Placement</div>
           </div>
           <div className="kpi-box">
             <div className="kpi-label">Status</div>
@@ -172,13 +172,107 @@ export default function MetricsPanel({
         </div>
       )}
 
-      {/* External Fragmentation Banner for Memory */}
+      {/* 6. Dynamic Programming Metrics */}
+      {category === 'DP' && (
+        <div className="kpi-grid">
+          <div className="kpi-box">
+            <div className="kpi-label">Optimal Value</div>
+            <div className="kpi-value" style={{ color: 'var(--success-text)' }}>
+              {currentStepData.stats?.maxValue ?? currentStepData.maxSoFar ?? currentStepData.lcsString?.length ?? 0}
+            </div>
+            <div className="kpi-sub">Global Optimum</div>
+          </div>
+          <div className="kpi-box">
+            <div className="kpi-label">Subproblem Cell</div>
+            <div className="kpi-value">
+              {currentStepData.currentItem !== undefined ? `dp[${currentStepData.currentItem}][${currentStepData.currentW}]` : (currentStepData.i !== undefined ? `dp[${currentStepData.i}][${currentStepData.j}]` : `idx=${currentStepData.currentIndex}`)}
+            </div>
+            <div className="kpi-sub">Active State</div>
+          </div>
+          <div className="kpi-box">
+            <div className="kpi-label">Selected Items / Length</div>
+            <div className="kpi-value">{currentStepData.selectedItems?.length ?? currentStepData.lcsString?.length ?? (currentStepData.subarrayRange ? currentStepData.subarrayRange[1] - currentStepData.subarrayRange[0] + 1 : 0)}</div>
+            <div className="kpi-sub">Subset Traceback</div>
+          </div>
+          <div className="kpi-box">
+            <div className="kpi-label">Status</div>
+            <div className="kpi-value" style={{ color: isFinished ? 'var(--success-text)' : 'var(--text-primary)' }}>
+              {isFinished ? 'Complete' : 'Tabulating...'}
+            </div>
+            <div className="kpi-sub">DP Recurrence</div>
+          </div>
+        </div>
+      )}
+
+      {/* 7. Array & String Techniques Metrics */}
+      {category === 'ARRAY_STRING' && (
+        <div className="kpi-grid">
+          <div className="kpi-box">
+            <div className="kpi-label">Window / Pointers</div>
+            <div className="kpi-value">
+              {currentStepData.windowSum !== undefined ? `Sum=${currentStepData.windowSum}` : (currentStepData.currentSum !== undefined ? `Sum=${currentStepData.currentSum}` : `P=${currentStepData.patternIndex}`)}
+            </div>
+            <div className="kpi-sub">Active State Metric</div>
+          </div>
+          <div className="kpi-box">
+            <div className="kpi-label">Max / Target / Matches</div>
+            <div className="kpi-value" style={{ color: 'var(--primary)' }}>
+              {currentStepData.maxSum ?? currentStepData.target ?? currentStepData.matches?.length ?? (currentStepData.gcd ?? currentStepData.a)}
+            </div>
+            <div className="kpi-sub">Goal Metric</div>
+          </div>
+          <div className="kpi-box">
+            <div className="kpi-label">Step Index</div>
+            <div className="kpi-value">Step {currentStepData.stepIndex}</div>
+            <div className="kpi-sub">Execution Track</div>
+          </div>
+          <div className="kpi-box">
+            <div className="kpi-label">Status</div>
+            <div className="kpi-value" style={{ color: isFinished ? 'var(--success-text)' : 'var(--text-primary)' }}>
+              {isFinished ? 'Complete' : 'Scanning...'}
+            </div>
+            <div className="kpi-sub">Algorithm Lifecycle</div>
+          </div>
+        </div>
+      )}
+
+      {/* 8. Backtracking & Greedy Metrics */}
+      {category === 'BACKTRACKING_GREEDY' && (
+        <div className="kpi-grid">
+          <div className="kpi-box">
+            <div className="kpi-label">Solutions / Picked</div>
+            <div className="kpi-value" style={{ color: 'var(--success-text)' }}>
+              {currentStepData.solutionsCount ?? currentStepData.selectedActivities?.length ?? 0}
+            </div>
+            <div className="kpi-sub">Count Discovered</div>
+          </div>
+          <div className="kpi-box">
+            <div className="kpi-label">Current Action</div>
+            <div className="kpi-value">{currentStepData.action ?? (currentStepData.currentActivity?.id ?? 'Scan')}</div>
+            <div className="kpi-sub">Branch State</div>
+          </div>
+          <div className="kpi-box">
+            <div className="kpi-label">Decisions Explored</div>
+            <div className="kpi-value">{currentStepData.stepIndex}</div>
+            <div className="kpi-sub">State Tree Steps</div>
+          </div>
+          <div className="kpi-box">
+            <div className="kpi-label">Status</div>
+            <div className="kpi-value" style={{ color: isFinished ? 'var(--success-text)' : 'var(--text-primary)' }}>
+              {isFinished ? 'Complete' : 'Pruning & Solving'}
+            </div>
+            <div className="kpi-sub">Backtrack Search</div>
+          </div>
+        </div>
+      )}
+
+      {/* External Fragmentation Alert */}
       {currentStepData.isExternalFragmentation && (
-        <div className="alert-banner alert-danger" style={{ marginTop: '1rem' }}>
-          <AlertTriangle size={20} style={{ flexShrink: 0 }} />
+        <div className="alert-banner alert-danger" style={{ marginTop: '0.75rem' }}>
+          <AlertTriangle size={18} style={{ flexShrink: 0 }} />
           <div>
             <strong>External Fragmentation Detected</strong>
-            <p style={{ marginTop: '3px', fontSize: '0.85rem' }}>
+            <p style={{ marginTop: '2px', fontSize: '0.8rem' }}>
               Total free memory is <strong>{currentStepData.totalFreeMemory} KB</strong>, but largest contiguous block is only <strong>{currentStepData.largestFreeHole} KB</strong>. Cannot fit process {currentStepData.currentProcess?.name} ({currentStepData.currentProcess?.size} KB).
             </p>
           </div>
