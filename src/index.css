@@ -1,7 +1,7 @@
 /* ==========================================================================
    AlgoLab • Professional Algorithm Simulation Laboratory & Workbench
    Design System: Light Champagne Gold & Wood & Luminous Obsidian Gold Glass
-   Aesthetics: Pro Dropdown Navigation, Interactive Workbench Ribbon, Frosted Glass
+   Aesthetics: Modern Rounded Glassmorphism, Visible Downward Algorithm Grid
    ========================================================================== */
 
 /* 1. Light Mode: Luminous White & Light Champagne Gold */
@@ -242,8 +242,9 @@ body {
   font-family: var(--font-mono);
 }
 
+/* Strictly Hidden on Desktop */
 .mobile-menu-toggle {
-  display: none;
+  display: none !important;
 }
 
 .header-actions {
@@ -270,7 +271,7 @@ body {
   width: 100%;
   padding: 1.25rem 1.65rem;
   display: grid;
-  grid-template-columns: 310px 1fr;
+  grid-template-columns: 320px 1fr;
   gap: 1.25rem;
   flex: 1;
   align-items: start;
@@ -325,7 +326,7 @@ body {
   border: 1px solid var(--border-color);
 }
 
-/* Custom Dropdown Selectors */
+/* Custom Domain Dropdown Selector */
 .custom-select-trigger {
   width: 100%;
   display: flex;
@@ -428,6 +429,46 @@ body {
   color: var(--primary);
   border-color: var(--primary);
   font-weight: 700;
+}
+
+/* Downward Listed Algorithm Buttons Grid */
+.compact-algo-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.compact-algo-btn {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 7px 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+  background: var(--bg-card);
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.12s ease;
+}
+
+.compact-algo-btn:hover:not(:disabled) {
+  border-color: var(--border-focus);
+  background: var(--bg-card-hover);
+}
+
+.compact-algo-btn.active {
+  border-color: var(--primary);
+  background: var(--primary-light);
+  box-shadow: 0 0 0 1px var(--primary);
+}
+
+.compact-algo-title {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.775rem;
+  font-weight: 600;
+  color: var(--text-primary);
 }
 
 /* Controls Grid */
@@ -733,7 +774,7 @@ body {
   min-height: 40px;
 }
 
-/* Interactive Workbench Ribbon Bar (Yellow Highlight Location) */
+/* Interactive Workbench Ribbon Bar */
 .workbench-ribbon-bar {
   background: var(--bg-card);
   backdrop-filter: blur(18px);
@@ -1791,15 +1832,15 @@ body {
   margin-bottom: 0.95rem;
 }
 
-/* Responsive Mobile Breakpoints */
-@media (max-width: 1024px) {
+/* Responsive Mobile Breakpoints (Strictly for mobile only) */
+@media (max-width: 768px) {
   .app-layout {
     grid-template-columns: 1fr;
-    padding: 0.95rem;
+    padding: 0.85rem;
   }
 
   .mobile-menu-toggle {
-    display: inline-flex;
+    display: inline-flex !important;
   }
 
   .btn-text-hide-mobile {
