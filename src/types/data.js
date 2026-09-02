@@ -1,4 +1,9 @@
-// Algorithm Simulator Suite - Comprehensive Definitions & Presets
+// Algorithm Simulator Suite - Comprehensive Definitions, Themes & Presets
+
+export const THEMES = [
+  { id: 'light', name: 'Light Mode', type: 'light' },
+  { id: 'dark', name: 'Dark Mode', type: 'dark' },
+];
 
 export const CATEGORIES = {
   OS: {
@@ -7,9 +12,9 @@ export const CATEGORIES = {
     icon: 'Cpu',
     description: 'Memory allocation, CPU process scheduling, and paging algorithms.',
     subcategories: [
-      { id: 'memory', name: 'Memory Allocation', defaultAlgo: 'first-fit' },
-      { id: 'cpu', name: 'CPU Scheduling', defaultAlgo: 'round-robin' },
-      { id: 'paging', name: 'Page Replacement', defaultAlgo: 'lru' },
+      { id: 'memory', name: 'Memory Allocation', defaultAlgo: 'first-fit', algos: ['first-fit', 'best-fit', 'worst-fit', 'next-fit'] },
+      { id: 'cpu', name: 'CPU Scheduling', defaultAlgo: 'round-robin', algos: ['round-robin', 'fcfs-cpu', 'sjf-cpu', 'priority-cpu'] },
+      { id: 'paging', name: 'Page Replacement', defaultAlgo: 'lru', algos: ['lru', 'fifo-paging', 'optimal-paging'] },
     ]
   },
   GRAPH: {
@@ -18,7 +23,7 @@ export const CATEGORIES = {
     icon: 'Network',
     description: 'Graph traversals, shortest path exploration, and search wavefronts.',
     subcategories: [
-      { id: 'pathfinding', name: 'Graph Search & Pathfinding', defaultAlgo: 'bfs' },
+      { id: 'pathfinding', name: 'Graph Search', defaultAlgo: 'bfs', algos: ['bfs', 'dfs', 'dijkstra'] },
     ]
   },
   SORT_SEARCH: {
@@ -27,13 +32,12 @@ export const CATEGORIES = {
     icon: 'BarChart3',
     description: 'Divide-and-conquer sorting, comparative sorting, and binary interval search.',
     subcategories: [
-      { id: 'sorting', name: 'Sorting Algorithms', defaultAlgo: 'quicksort' },
-      { id: 'searching', name: 'Searching Algorithms', defaultAlgo: 'binary-search' },
+      { id: 'sorting', name: 'Sorting Algorithms', defaultAlgo: 'quicksort', algos: ['quicksort', 'mergesort', 'bubblesort'] },
+      { id: 'searching', name: 'Searching Algorithms', defaultAlgo: 'binary-search', algos: ['binary-search'] },
     ]
   }
 };
 
-// All Algorithm Metadata
 export const ALGORITHMS_REGISTRY = {
   // Memory Allocation
   'first-fit': {
@@ -41,8 +45,8 @@ export const ALGORITHMS_REGISTRY = {
     category: 'os',
     sub: 'memory',
     name: 'First Fit',
-    shortDescription: 'Scans from the start and allocates the first hole that is large enough.',
-    rule: 'First hole where size ≥ request',
+    shortDescription: 'Scans sequentially and allocates the first hole that is large enough.',
+    rule: 'First hole where size >= request',
     timeComplexity: 'O(N)',
     spaceComplexity: 'O(1)',
     tag: 'Fastest Allocation',
@@ -55,7 +59,7 @@ export const ALGORITHMS_REGISTRY = {
     sub: 'memory',
     name: 'Best Fit',
     shortDescription: 'Scans all holes and allocates the smallest hole that is large enough.',
-    rule: 'min(hole_size - request) where size ≥ request',
+    rule: 'min(hole_size - request) where size >= request',
     timeComplexity: 'O(N)',
     spaceComplexity: 'O(1)',
     tag: 'Highest Utilization',
@@ -68,7 +72,7 @@ export const ALGORITHMS_REGISTRY = {
     sub: 'memory',
     name: 'Worst Fit',
     shortDescription: 'Allocates the largest available hole to produce the largest remainder.',
-    rule: 'max(hole_size) where size ≥ request',
+    rule: 'max(hole_size) where size >= request',
     timeComplexity: 'O(N)',
     spaceComplexity: 'O(1)',
     tag: 'Max Remainder',
@@ -81,7 +85,7 @@ export const ALGORITHMS_REGISTRY = {
     sub: 'memory',
     name: 'Next Fit',
     shortDescription: 'Continues scanning from the location of the last allocation.',
-    rule: 'First hole ≥ request starting at last scan pointer',
+    rule: 'First hole >= request starting at last scan pointer',
     timeComplexity: 'O(N)',
     spaceComplexity: 'O(1)',
     tag: 'Circular Search',
@@ -97,7 +101,7 @@ export const ALGORITHMS_REGISTRY = {
     name: 'Round Robin (RR)',
     shortDescription: 'Preemptive scheduling with fixed time quantum per process.',
     rule: 'Fixed Time Slice (Quantum = 2)',
-    timeComplexity: 'O(1) per switch',
+    timeComplexity: 'O(1) switch',
     spaceComplexity: 'O(N) queue',
     tag: 'Fair Time-Sharing',
     accentColor: '#06b6d4',
@@ -151,7 +155,7 @@ export const ALGORITHMS_REGISTRY = {
     name: 'Least Recently Used (LRU)',
     shortDescription: 'Evicts the page in memory that has not been referenced for the longest time.',
     rule: 'Evict min(last_access_time)',
-    timeComplexity: 'O(1) with stack/hash',
+    timeComplexity: 'O(1) stack/hash',
     spaceComplexity: 'O(Frames)',
     tag: 'Optimal Heuristic',
     accentColor: '#10b981',
@@ -233,8 +237,8 @@ export const ALGORITHMS_REGISTRY = {
     name: 'Quick Sort',
     shortDescription: 'Divide-and-conquer sorting by partitioning around a selected pivot element.',
     rule: 'Partitioning: elements < pivot left, elements > pivot right',
-    timeComplexity: 'O(N log N) avg, O(N²) worst',
-    spaceComplexity: 'O(log N) stack',
+    timeComplexity: 'O(N log N) avg',
+    spaceComplexity: 'O(log N)',
     tag: 'Divide & Conquer',
     accentColor: '#8b5cf6',
     detailedExplanation: 'Quick Sort chooses a pivot, partitions the array such that smaller elements move left and larger right, and recursively sorts sub-arrays in-place.'
@@ -259,9 +263,9 @@ export const ALGORITHMS_REGISTRY = {
     name: 'Bubble Sort',
     shortDescription: 'Repeatedly steps through list, swaps adjacent elements that are out of order.',
     rule: 'if (A[i] > A[i+1]) swap',
-    timeComplexity: 'O(N²) avg/worst, O(N) best',
+    timeComplexity: 'O(N²) avg/worst',
     spaceComplexity: 'O(1)',
-    tag: 'Educational Classic',
+    tag: 'Classic Comparative',
     accentColor: '#f97316',
     detailedExplanation: 'Bubble Sort compares adjacent elements and bubbles the largest item to the top in each pass. Ideal for understanding fundamental swap mechanics.'
   },
@@ -271,7 +275,7 @@ export const ALGORITHMS_REGISTRY = {
     sub: 'searching',
     name: 'Binary Search',
     shortDescription: 'Logarithmic search on a sorted array by repeatedly dividing the search interval in half.',
-    rule: 'mid = (low + high) / 2; narrow to left or right half',
+    rule: 'mid = (low + high) / 2; narrow to half',
     timeComplexity: 'O(log N)',
     spaceComplexity: 'O(1)',
     tag: 'Logarithmic Search',
@@ -280,7 +284,7 @@ export const ALGORITHMS_REGISTRY = {
   }
 };
 
-// Default Presets for Each Subcategory
+// Default Presets
 export const DEFAULT_HOLES = [
   { id: 'H1', label: 'H1', size: 150, base: 0 },
   { id: 'H2', label: 'H2', size: 550, base: 150 },
@@ -310,16 +314,15 @@ export const DEFAULT_SORT_ARRAY = [64, 34, 25, 12, 22, 11, 90, 45, 78, 50];
 export const DEFAULT_SEARCH_TARGET = 45;
 
 export const DEFAULT_GRID_CONFIG = {
-  rows: 10,
+  rows: 9,
   cols: 14,
   start: { r: 1, c: 1 },
-  target: { r: 8, c: 12 },
+  target: { r: 7, c: 12 },
   walls: [
     { r: 2, c: 3 }, { r: 3, c: 3 }, { r: 4, c: 3 }, { r: 5, c: 3 }, { r: 6, c: 3 },
-    { r: 4, c: 6 }, { r: 5, c: 6 }, { r: 6, c: 6 }, { r: 7, c: 6 }, { r: 8, c: 6 },
-    { r: 2, c: 9 }, { r: 3, c: 9 }, { r: 4, c: 9 }, { r: 5, c: 9 },
+    { r: 4, c: 6 }, { r: 5, c: 6 }, { r: 6, c: 6 }, { r: 7, c: 6 },
+    { r: 1, c: 9 }, { r: 2, c: 9 }, { r: 3, c: 9 }, { r: 4, c: 9 },
   ]
 };
 
-// Backwards compatibility alias
 export const ALGORITHMS = ALGORITHMS_REGISTRY;
