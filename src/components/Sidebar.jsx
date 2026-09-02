@@ -98,10 +98,7 @@ export default function Sidebar({
   isOpenOnMobile = false
 }) {
   const [isDomainDropdownOpen, setIsDomainDropdownOpen] = useState(false);
-  const [isAlgoDropdownOpen, setIsAlgoDropdownOpen] = useState(false);
-
   const domainDropdownRef = useRef(null);
-  const algoDropdownRef = useRef(null);
 
   const currentCatObj = CATEGORIES[selectedCategory] || CATEGORIES.OS;
   const currentAlgoObj = ALGORITHMS_REGISTRY[selectedAlgo] || ALGORITHMS_REGISTRY['first-fit'];
@@ -110,14 +107,11 @@ export default function Sidebar({
   const subcategories = currentCatObj.subcategories || [];
   const activeSubcategory = subcategories.find(s => s.algos.includes(selectedAlgo)) || subcategories[0] || { algos: [] };
 
-  // Close dropdowns on click outside
+  // Close domain dropdown on click outside
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (domainDropdownRef.current && !domainDropdownRef.current.contains(e.target)) {
         setIsDomainDropdownOpen(false);
-      }
-      if (algoDropdownRef.current && !algoDropdownRef.current.contains(e.target)) {
-        setIsAlgoDropdownOpen(false);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
@@ -136,10 +130,7 @@ export default function Sidebar({
         <button
           type="button"
           className="custom-select-trigger"
-          onClick={() => {
-            setIsDomainDropdownOpen(!isDomainDropdownOpen);
-            setIsAlgoDropdownOpen(false);
-          }}
+          onClick={() => setIsDomainDropdownOpen(!isDomainDropdownOpen)}
           disabled={isRunning}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0 }}>
@@ -178,8 +169,8 @@ export default function Sidebar({
         )}
       </div>
 
-      {/* 2. Subcategory & Algorithm Selection Dropdowns */}
-      <div className="sidebar-section" ref={algoDropdownRef} style={{ position: 'relative' }}>
+      {/* 2. Subcategory Tabs & All Algorithms Listed Downwards Directly */}
+      <div className="sidebar-section">
         <div className="sidebar-header-row">
           <label className="sidebar-label">Active Algorithm</label>
           <span className="complexity-badge">{currentAlgoObj.timeComplexity}</span>
@@ -204,56 +195,29 @@ export default function Sidebar({
           </div>
         )}
 
-        {/* Algorithm Dropdown Trigger */}
-        <button
-          type="button"
-          className="custom-select-trigger"
-          onClick={() => {
-            setIsAlgoDropdownOpen(!isAlgoDropdownOpen);
-            setIsDomainDropdownOpen(false);
-          }}
-          disabled={isRunning}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0 }}>
-            {ALGO_ICON_MAP[selectedAlgo]}
-            <span style={{ fontWeight: 700, fontSize: '0.85rem', color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-              {currentAlgoObj.name}
-            </span>
-          </div>
-          <ChevronDown size={15} color="var(--primary)" style={{ transform: isAlgoDropdownOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s ease' }} />
-        </button>
+        {/* All Algorithms Listed Downwards Directly (Always Visible!) */}
+        <div className="compact-algo-grid">
+          {activeSubcategory.algos.map((algoId) => {
+            const algo = ALGORITHMS_REGISTRY[algoId];
+            if (!algo) return null;
+            const isSelected = selectedAlgo === algo.id;
 
-        {/* Algorithm Dropdown Popover */}
-        {isAlgoDropdownOpen && (
-          <div className="custom-select-menu">
-            {activeSubcategory.algos.map((algoId) => {
-              const algo = ALGORITHMS_REGISTRY[algoId];
-              if (!algo) return null;
-              const isSelected = selectedAlgo === algo.id;
-
-              return (
-                <button
-                  key={algo.id}
-                  type="button"
-                  className={`custom-select-item ${isSelected ? 'active' : ''}`}
-                  onClick={() => {
-                    onSelectAlgo(algo.id);
-                    setIsAlgoDropdownOpen(false);
-                  }}
-                >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    {ALGO_ICON_MAP[algo.id]}
-                    <span style={{ fontWeight: isSelected ? 800 : 600 }}>{algo.name}</span>
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <span style={{ fontSize: '0.65rem', fontFamily: 'var(--font-mono)', color: 'var(--text-muted)' }}>{algo.timeComplexity}</span>
-                    {isSelected && <Check size={14} color="var(--primary)" />}
-                  </div>
-                </button>
-              );
-            })}
-          </div>
-        )}
+            return (
+              <button
+                key={algo.id}
+                type="button"
+                className={`compact-algo-btn ${isSelected ? 'active' : ''}`}
+                onClick={() => onSelectAlgo(algo.id)}
+                disabled={isRunning}
+              >
+                <div className="compact-algo-title">
+                  {ALGO_ICON_MAP[algo.id]}
+                  <span>{algo.name}</span>
+                </div>
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       {/* 3. Playback Controls Toolbar */}
