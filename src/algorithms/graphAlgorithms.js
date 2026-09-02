@@ -182,17 +182,17 @@ export function generateGraphTrace(algorithmId, gridConfig) {
     if (curr === startKey) path.unshift(startKey);
 
     // Final Success Step
-    steps.push({
-      stepIndex: steps.length,
-      currentCell: target,
-      visitedCells: [...visitedOrder],
-      frontierCells: [],
-      pathCells: [...path],
-      targetFound: true,
-      explanation: `Target Found! 🎯 Optimal path reconstructed with ${path.length} steps (${visitedOrder.length} nodes visited).`,
-      isFinished: true,
-      stats: { visitedCount: visitedOrder.length, pathLength: path.length, cost: path.length - 1 }
-    });
+      steps.push({
+        stepIndex: steps.length,
+        currentCell: target,
+        visitedCells: [...visitedOrder],
+        frontierCells: [],
+        pathCells: [...path],
+        targetFound: true,
+        explanation: `Target Found: Optimal path reconstructed with ${path.length} steps (${visitedOrder.length} nodes visited).`,
+        isFinished: true,
+        stats: { visitedCount: visitedOrder.length, pathLength: path.length, cost: path.length - 1 }
+      });
   } else {
     steps.push({
       stepIndex: steps.length,
