@@ -56,7 +56,7 @@
   --free-block-bg: #f8f5ee;
   --free-block-stripe: #eee5d3;
   --free-block-border: #dacbb3;
-  --free-block-text: #8c7355;
+  --free-block-text: #000000;
 
   --shadow-xs: 0 1px 3px 0 rgba(35, 27, 20, 0.04);
   --shadow-sm: 0 2px 6px 0 rgba(35, 27, 20, 0.07);
@@ -127,7 +127,7 @@
   --free-block-bg: #121824;
   --free-block-stripe: #0a0d14;
   --free-block-border: rgba(245, 214, 142, 0.22);
-  --free-block-text: #94a3b8;
+  --free-block-text: #ffffff;
 
   --shadow-xs: 0 1px 3px 0 rgba(0, 0, 0, 0.5);
   --shadow-sm: 0 2px 6px 0 rgba(0, 0, 0, 0.6);
@@ -724,7 +724,23 @@ body {
     var(--free-block-stripe) 6px,
     var(--free-block-stripe) 12px
   );
-  color: var(--free-block-text);
+  color: var(--free-block-text) !important;
+}
+
+.memory-block.is-free .block-tag,
+.memory-block.is-free .block-size,
+.memory-block.is-free .block-status,
+.memory-block.is-free .address-marker {
+  color: var(--free-block-text) !important;
+  opacity: 1 !important;
+}
+
+.memory-block.is-free .block-tag {
+  font-weight: 900;
+}
+
+.memory-block.is-free .block-size {
+  font-weight: 700;
 }
 
 .memory-block.is-allocated {
