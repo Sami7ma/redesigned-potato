@@ -108,15 +108,3 @@ AlgoLab provides a curated **frosted glassmorphic design system**:
 | <kbd>R</kbd> | Reset Simulation to Initial State |
 | <kbd>C</kbd> | Open Cross-Algorithm Comparison Matrix |
 | <kbd>Esc</kbd> | Close Active Modal / Popover |
-
----
-
-## 🛠️ Build & Verification
-
-```bash
-# Production bundle build
-npm run build
-
-# Preview production build locally
-npm run preview
-```
